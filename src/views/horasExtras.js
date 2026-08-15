@@ -8,27 +8,27 @@ let fechaInicioFiltro = '';
 let fechaFinFiltro = '';
 
 /**
- * Renderiza la interfaz de la Pantalla 5 (Reporte de Horas Extras)
+ * Renderiza la interfaz de la Pantalla 5 (Reporte de Horas Extras - Estilo Linear/shadcn)
  */
 export function renderHorasExtrasView() {
   return `
-    <div class="space-y-6 pb-12">
+    <div class="space-y-6 pb-16">
       
       <!-- Encabezado de la Pantalla 5 -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-bold text-slate-100 flex items-center gap-2.5">
-            <i data-lucide="clock" class="w-7 h-7 text-rose-500"></i>
+          <h1 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2.5">
+            <i data-lucide="clock" class="w-7 h-7 text-rose-600 dark:text-rose-500"></i>
             <span>Reporte de Horas Extras & Exportación Excel</span>
           </h1>
-          <p class="text-sm text-slate-400 mt-1">Cálculo laboral según jornada ordinaria (L-V 8:00-17:30, Sáb 8:00-13:30, Dom/Feriados 100%) y reglas de redondeo.</p>
+          <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Cálculo laboral según jornada ordinaria (L-V 8:00-17:30, Sáb 8:00-13:30, Dom/Feriados 100%) y reglas de redondeo.</p>
         </div>
 
         <!-- Botón Exportar a Excel -->
         <div class="flex items-center gap-3">
           <button 
             id="btn-exportar-excel" 
-            class="px-5 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-lg shadow-emerald-500/25 flex items-center space-x-2 transition-all transform active:scale-95 cursor-pointer"
+            class="px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-500/20 flex items-center space-x-2 transition-all transform active:scale-95 cursor-pointer"
           >
             <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
             <span>Exportar Excel (.XLSX)</span>
@@ -40,94 +40,94 @@ export function renderHorasExtrasView() {
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         
         <!-- Total Horas Extras a Liquidar -->
-        <div class="glass-card p-5 rounded-2xl border border-slate-800 flex items-center space-x-4">
-          <div class="p-3 rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
+        <div class="glass-card p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex items-center space-x-4 bg-white dark:bg-zinc-900/80">
+          <div class="p-3 rounded-2xl bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
             <i data-lucide="clock" class="w-6 h-6"></i>
           </div>
           <div>
-            <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Total Horas Extras (Redondeadas)</div>
-            <div id="kpi-total-horas-extras" class="text-2xl font-mono font-bold text-rose-400 mt-0.5">0.0 h</div>
+            <div class="text-[11px] text-zinc-500 dark:text-zinc-400 font-semibold uppercase tracking-wider">Total Horas Extras (Redondeadas)</div>
+            <div id="kpi-total-horas-extras" class="text-2xl font-mono font-bold text-rose-600 dark:text-rose-400 mt-0.5">0.0 h</div>
           </div>
         </div>
 
         <!-- Registros / Tareas con Sobretiempo -->
-        <div class="glass-card p-5 rounded-2xl border border-slate-800 flex items-center space-x-4">
-          <div class="p-3 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+        <div class="glass-card p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex items-center space-x-4 bg-white dark:bg-zinc-900/80">
+          <div class="p-3 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
             <i data-lucide="file-text" class="w-6 h-6"></i>
           </div>
           <div>
-            <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Registros con Sobretiempo</div>
-            <div id="kpi-conteo-registros" class="text-2xl font-mono font-bold text-white mt-0.5">0</div>
+            <div class="text-[11px] text-zinc-500 dark:text-zinc-400 font-semibold uppercase tracking-wider">Registros con Sobretiempo</div>
+            <div id="kpi-conteo-registros" class="text-2xl font-mono font-bold text-zinc-900 dark:text-white mt-0.5">0</div>
           </div>
         </div>
 
         <!-- Horas Extras Reales Exactas -->
-        <div class="glass-card p-5 rounded-2xl border border-slate-800 flex items-center space-x-4">
-          <div class="p-3 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+        <div class="glass-card p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex items-center space-x-4 bg-white dark:bg-zinc-900/80">
+          <div class="p-3 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
             <i data-lucide="calculator" class="w-6 h-6"></i>
           </div>
           <div>
-            <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Horas Extras Exactas (Sin Redondeo)</div>
-            <div id="kpi-horas-exactas" class="text-2xl font-mono font-bold text-blue-400 mt-0.5">0.00 h</div>
+            <div class="text-[11px] text-zinc-500 dark:text-zinc-400 font-semibold uppercase tracking-wider">Horas Extras Exactas (Sin Redondeo)</div>
+            <div id="kpi-horas-exactas" class="text-2xl font-mono font-bold text-blue-600 dark:text-blue-400 mt-0.5">0.00 h</div>
           </div>
         </div>
 
       </div>
 
       <!-- Barra de Filtros por Rango de Fechas -->
-      <div class="glass-panel p-5 rounded-2xl border border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+      <div class="glass-panel p-4 sm:p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white dark:bg-zinc-900/70 shadow-sm">
         
         <div class="flex flex-wrap items-center gap-3">
           <div class="flex items-center space-x-2">
-            <label for="filtro-he-desde" class="text-xs font-semibold text-slate-400 uppercase">Fecha Inicial:</label>
+            <label for="filtro-he-desde" class="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase">Fecha Inicial:</label>
             <input 
               type="date" 
               id="filtro-he-desde" 
               value="${fechaInicioFiltro}" 
-              class="px-3 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-rose-500 transition-colors"
+              class="px-2.5 py-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-rose-500 transition-colors"
             />
           </div>
 
           <div class="flex items-center space-x-2">
-            <label for="filtro-he-hasta" class="text-xs font-semibold text-slate-400 uppercase">Fecha Final:</label>
+            <label for="filtro-he-hasta" class="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase">Fecha Final:</label>
             <input 
               type="date" 
               id="filtro-he-hasta" 
               value="${fechaFinFiltro}" 
-              class="px-3 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-rose-500 transition-colors"
+              class="px-2.5 py-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-rose-500 transition-colors"
             />
           </div>
 
-          <button id="btn-limpiar-filtro-he" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors">
+          <button id="btn-limpiar-filtro-he" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 transition-colors active:scale-95">
             Todos los Registros
           </button>
         </div>
 
-        <div class="text-xs text-slate-400 font-mono">
-          Mostrando: <span id="contador-he-registros" class="text-rose-400 font-bold">0</span> registros
+        <div class="text-xs text-zinc-500 dark:text-zinc-400 font-mono">
+          Mostrando: <span id="contador-he-registros" class="text-rose-600 dark:text-rose-400 font-bold">0</span> registros
         </div>
 
       </div>
 
       <!-- Tabla de Reporte de Horas Extras -->
-      <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800">
+      <div class="glass-panel rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-sm">
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm text-slate-300">
-            <thead class="bg-slate-950/80 text-xs uppercase font-semibold text-slate-400 tracking-wider border-b border-slate-800">
+          <table class="w-full text-left text-xs text-zinc-700 dark:text-zinc-300">
+            <thead class="bg-zinc-50 dark:bg-zinc-950/80 text-[11px] uppercase font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider border-b border-zinc-200 dark:border-zinc-800">
               <tr>
-                <th scope="col" class="py-3.5 px-4 font-mono">Fecha</th>
-                <th scope="col" class="py-3.5 px-4 font-mono text-amber-400">Hora Inicio HE</th>
-                <th scope="col" class="py-3.5 px-4 font-mono text-amber-400">Hora Fin HE</th>
-                <th scope="col" class="py-3.5 px-4 font-mono">Código</th>
-                <th scope="col" class="py-3.5 px-4">Descripción de la Pieza</th>
-                <th scope="col" class="py-3.5 px-4 text-center">Cant.</th>
-                <th scope="col" class="py-3.5 px-4 text-right font-mono text-rose-400">Horas Extras a Liquidar</th>
+                <th scope="col" class="py-3 px-4 font-mono">Fecha</th>
+                <th scope="col" class="py-3 px-4 font-mono text-amber-600 dark:text-amber-400">Hora Inicio HE</th>
+                <th scope="col" class="py-3 px-4 font-mono text-amber-600 dark:text-amber-400">Hora Fin HE</th>
+                <th scope="col" class="py-3 px-4 font-mono">Código</th>
+                <th scope="col" class="py-3 px-4">Descripción de la Pieza</th>
+                <th scope="col" class="py-3 px-4 text-center">Cant.</th>
+                <th scope="col" class="py-3 px-4 text-right font-mono text-rose-600 dark:text-rose-400">Horas Extras a Liquidar</th>
               </tr>
             </thead>
-            <tbody id="lista-he-body" class="divide-y divide-slate-800/60 bg-slate-900/30">
+            <tbody id="lista-he-body" class="divide-y divide-zinc-200 dark:divide-zinc-800/60 bg-white dark:bg-zinc-900/30">
               <!-- Renderizado dinámico -->
               <tr>
-                <td colspan="7" class="py-12 text-center text-slate-500">
+                <td colspan="7" class="py-12 text-center text-zinc-400">
                   <div class="flex flex-col items-center justify-center space-y-2">
                     <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-rose-500"></i>
                     <span>Calculando horas extras laborales...</span>
@@ -182,13 +182,13 @@ export async function refrescarHorasExtras(onRefreshIcons) {
     if (filtrados.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="7" class="py-12 text-center text-slate-500">
-            <div class="flex flex-col items-center justify-center space-y-3">
-              <div class="w-12 h-12 rounded-2xl bg-slate-800/60 flex items-center justify-center text-slate-400">
-                <i data-lucide="inbox" class="w-6 h-6"></i>
+          <td colspan="7" class="py-12 text-center text-zinc-400">
+            <div class="flex flex-col items-center justify-center space-y-2.5">
+              <div class="w-10 h-10 rounded-2xl bg-zinc-100 dark:bg-zinc-800/60 flex items-center justify-center text-zinc-400">
+                <i data-lucide="inbox" class="w-5 h-5"></i>
               </div>
-              <p class="text-sm font-medium text-slate-300">No hay horas extras computadas en este período</p>
-              <p class="text-xs text-slate-500">
+              <p class="text-xs font-medium text-zinc-700 dark:text-zinc-300">No hay horas extras computadas en este período</p>
+              <p class="text-[11px] text-zinc-400">
                 Las horas extras se calculan automáticamente cuando se mecaniza fuera de la jornada ordinaria o en domingos/feriados.
               </p>
             </div>
@@ -198,30 +198,30 @@ export async function refrescarHorasExtras(onRefreshIcons) {
     } else {
       tbody.innerHTML = filtrados.map(r => {
         return `
-          <tr class="hover:bg-slate-800/40 transition-colors">
-            <td class="py-3 px-4 font-mono font-bold text-white whitespace-nowrap">
-              <span class="px-2 py-0.5 rounded-md bg-slate-800 text-slate-200 border border-slate-700">
+          <tr class="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors">
+            <td class="py-2.5 px-4 font-mono font-bold text-zinc-900 dark:text-white whitespace-nowrap">
+              <span class="px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 text-xs">
                 ${r.fechaCompleta}
               </span>
             </td>
-            <td class="py-3 px-4 font-mono text-amber-400 text-xs whitespace-nowrap">
+            <td class="py-2.5 px-4 font-mono text-amber-600 dark:text-amber-400 text-xs whitespace-nowrap">
               ${r.horaInicioHE}
             </td>
-            <td class="py-3 px-4 font-mono text-amber-400 text-xs whitespace-nowrap">
+            <td class="py-2.5 px-4 font-mono text-amber-600 dark:text-amber-400 text-xs whitespace-nowrap">
               ${r.horaFinHE}
             </td>
-            <td class="py-3 px-4 font-mono text-cyan-400 whitespace-nowrap">
+            <td class="py-2.5 px-4 font-mono text-blue-600 dark:text-blue-400 text-xs whitespace-nowrap">
               ${r.codigo1 || '-'}
             </td>
-            <td class="py-3 px-4 font-medium text-slate-200">
+            <td class="py-2.5 px-4 font-medium text-zinc-800 dark:text-zinc-200">
               ${r.descripcion}
-              ${r.codigo2 ? `<span class="ml-1 text-xs text-slate-500">(${r.codigo2})</span>` : ''}
+              ${r.codigo2 ? `<span class="ml-1 text-xs text-zinc-400 dark:text-zinc-500">(${r.codigo2})</span>` : ''}
             </td>
-            <td class="py-3 px-4 text-center font-mono text-slate-300 whitespace-nowrap">
+            <td class="py-2.5 px-4 text-center font-mono text-zinc-600 dark:text-zinc-400 whitespace-nowrap">
               ${r.cantidad} u.
             </td>
-            <td class="py-3 px-4 text-right font-mono font-bold text-rose-400 whitespace-nowrap">
-              <span class="px-3 py-1 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20 shadow-sm">
+            <td class="py-2.5 px-4 text-right font-mono font-bold text-rose-600 dark:text-rose-400 whitespace-nowrap">
+              <span class="px-2.5 py-0.5 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 shadow-sm text-xs">
                 ${r.horasExtrasRedondeadas.toFixed(1)} h
               </span>
             </td>

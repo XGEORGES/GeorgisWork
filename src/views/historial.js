@@ -9,24 +9,24 @@ let fechaDesde = '';
 let fechaHasta = '';
 
 /**
- * Renderiza la interfaz completa de la Pantalla 4 (Historial de Trabajos Terminados)
+ * Renderiza la interfaz completa de la Pantalla 4 (Historial de Trabajos Terminados - Estilo Linear/shadcn)
  */
 export function renderHistorialView() {
   return `
-    <div class="space-y-6 pb-12">
+    <div class="space-y-6 pb-16">
       
       <!-- Encabezado de la Pantalla 4 -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-bold text-slate-100 flex items-center gap-2.5">
-            <i data-lucide="history" class="w-7 h-7 text-emerald-500"></i>
+          <h1 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2.5">
+            <i data-lucide="history" class="w-7 h-7 text-emerald-600 dark:text-emerald-500"></i>
             <span>Historial de Trabajos Concluidos</span>
           </h1>
-          <p class="text-sm text-slate-400 mt-1">Registro cronológico de órdenes finalizadas, tiempos netos reales y métricas.</p>
+          <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Registro cronológico de órdenes finalizadas, tiempos netos reales y métricas.</p>
         </div>
 
         <div class="flex items-center gap-2">
-          <button id="btn-limpiar-filtros-historial" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors flex items-center space-x-1.5">
+          <button id="btn-limpiar-filtros-historial" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center space-x-1.5 active:scale-95">
             <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
             <span>Restablecer Filtros</span>
           </button>
@@ -37,78 +37,78 @@ export function renderHistorialView() {
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
         <!-- Total Trabajos Terminados -->
-        <div class="glass-card p-5 rounded-2xl border border-slate-800 flex items-center space-x-4">
-          <div class="p-3 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+        <div class="glass-card p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex items-center space-x-4 bg-white dark:bg-zinc-900/80">
+          <div class="p-3 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
             <i data-lucide="check-circle-2" class="w-6 h-6"></i>
           </div>
           <div>
-            <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Trabajos Concluidos</div>
-            <div id="kpi-total-trabajos" class="text-2xl font-mono font-bold text-white mt-0.5">0</div>
+            <div class="text-[11px] text-zinc-500 dark:text-zinc-400 font-semibold uppercase tracking-wider">Trabajos Concluidos</div>
+            <div id="kpi-total-trabajos" class="text-2xl font-mono font-bold text-zinc-900 dark:text-white mt-0.5">0</div>
           </div>
         </div>
 
         <!-- Total Piezas Producidas -->
-        <div class="glass-card p-5 rounded-2xl border border-slate-800 flex items-center space-x-4">
-          <div class="p-3 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+        <div class="glass-card p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex items-center space-x-4 bg-white dark:bg-zinc-900/80">
+          <div class="p-3 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
             <i data-lucide="layers" class="w-6 h-6"></i>
           </div>
           <div>
-            <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Piezas Fabricadas</div>
-            <div id="kpi-total-piezas" class="text-2xl font-mono font-bold text-white mt-0.5">0</div>
+            <div class="text-[11px] text-zinc-500 dark:text-zinc-400 font-semibold uppercase tracking-wider">Piezas Fabricadas</div>
+            <div id="kpi-total-piezas" class="text-2xl font-mono font-bold text-zinc-900 dark:text-white mt-0.5">0</div>
           </div>
         </div>
 
         <!-- Tiempo Total Mecanizado -->
-        <div class="glass-card p-5 rounded-2xl border border-slate-800 flex items-center space-x-4">
-          <div class="p-3 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+        <div class="glass-card p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex items-center space-x-4 bg-white dark:bg-zinc-900/80">
+          <div class="p-3 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
             <i data-lucide="clock" class="w-6 h-6"></i>
           </div>
           <div>
-            <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Tiempo Total Neto</div>
-            <div id="kpi-tiempo-total" class="text-2xl font-mono font-bold text-amber-400 mt-0.5">0h 0min</div>
+            <div class="text-[11px] text-zinc-500 dark:text-zinc-400 font-semibold uppercase tracking-wider">Tiempo Total Neto</div>
+            <div id="kpi-tiempo-total" class="text-2xl font-mono font-bold text-amber-600 dark:text-amber-400 mt-0.5">0h 0min</div>
           </div>
         </div>
 
         <!-- Promedio por Pieza -->
-        <div class="glass-card p-5 rounded-2xl border border-slate-800 flex items-center space-x-4">
-          <div class="p-3 rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+        <div class="glass-card p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex items-center space-x-4 bg-white dark:bg-zinc-900/80">
+          <div class="p-3 rounded-2xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
             <i data-lucide="gauge" class="w-6 h-6"></i>
           </div>
           <div>
-            <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Promedio / Pieza</div>
-            <div id="kpi-promedio-pieza" class="text-2xl font-mono font-bold text-cyan-400 mt-0.5">0 min</div>
+            <div class="text-[11px] text-zinc-500 dark:text-zinc-400 font-semibold uppercase tracking-wider">Promedio / Pieza</div>
+            <div id="kpi-promedio-pieza" class="text-2xl font-mono font-bold text-cyan-600 dark:text-cyan-400 mt-0.5">0 min</div>
           </div>
         </div>
 
       </div>
 
       <!-- Barra de Filtros Avanzados (Fechas, Búsqueda y Material) -->
-      <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+      <div class="glass-panel p-4 sm:p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 space-y-4 bg-white dark:bg-zinc-900/70 shadow-sm">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
           
           <!-- Búsqueda por texto -->
           <div class="md:col-span-4">
-            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Búsqueda rápida</label>
+            <label class="block text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Búsqueda rápida</label>
             <div class="relative">
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500">
-                <i data-lucide="search" class="w-4 h-4"></i>
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-zinc-400">
+                <i data-lucide="search" class="w-3.5 h-3.5"></i>
               </span>
               <input 
                 type="text" 
                 id="filtro-historial-texto" 
                 placeholder="Código, descripción o plano..." 
                 value="${filtroTexto}"
-                class="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-950/80 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-emerald-500 transition-colors"
+                class="w-full pl-8 pr-3 py-2 rounded-lg bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 text-xs focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-colors"
               />
             </div>
           </div>
 
           <!-- Filtro por Material -->
           <div class="md:col-span-3">
-            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Material</label>
+            <label class="block text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Material</label>
             <select 
               id="filtro-historial-material" 
-              class="w-full px-3 py-2 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 transition-colors"
+              class="w-full px-2.5 py-2 rounded-lg bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-emerald-500 transition-colors"
             >
               <option value="todos" ${filtroMaterial === 'todos' ? 'selected' : ''}>Todos los materiales</option>
               ${MATERIALES_CNC.map(m => `<option value="${m}" ${filtroMaterial === m ? 'selected' : ''}>${m}</option>`).join('')}
@@ -117,55 +117,55 @@ export function renderHistorialView() {
 
           <!-- Rango: Fecha Desde -->
           <div class="md:col-span-2">
-            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Fecha Desde</label>
+            <label class="block text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Fecha Desde</label>
             <input 
               type="date" 
               id="filtro-historial-desde" 
               value="${fechaDesde}"
-              class="w-full px-3 py-2 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 transition-colors"
+              class="w-full px-2.5 py-2 rounded-lg bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-emerald-500 transition-colors"
             />
           </div>
 
           <!-- Rango: Fecha Hasta -->
           <div class="md:col-span-2">
-            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Fecha Hasta</label>
+            <label class="block text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Fecha Hasta</label>
             <input 
               type="date" 
               id="filtro-historial-hasta" 
               value="${fechaHasta}"
-              class="w-full px-3 py-2 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 transition-colors"
+              class="w-full px-2.5 py-2 rounded-lg bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-emerald-500 transition-colors"
             />
           </div>
 
           <!-- Contador Resultados -->
-          <div class="md:col-span-1 flex items-center justify-end pb-1">
-            <span class="text-xs font-mono text-slate-400" id="contador-historial">0</span>
+          <div class="md:col-span-1 flex items-center justify-end pb-2">
+            <span class="text-xs font-mono text-zinc-500 dark:text-zinc-400" id="contador-historial">0</span>
           </div>
 
         </div>
       </div>
 
       <!-- Tabla de Trabajos Terminados -->
-      <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800">
+      <div class="glass-panel rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-sm">
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm text-slate-300">
-            <thead class="bg-slate-950/80 text-xs uppercase font-semibold text-slate-400 tracking-wider border-b border-slate-800">
+          <table class="w-full text-left text-xs text-zinc-700 dark:text-zinc-300">
+            <thead class="bg-zinc-50 dark:bg-zinc-950/80 text-[11px] uppercase font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider border-b border-zinc-200 dark:border-zinc-800">
               <tr>
-                <th scope="col" class="py-3.5 px-4 font-mono">Código 1</th>
-                <th scope="col" class="py-3.5 px-4 font-mono">Código 2</th>
-                <th scope="col" class="py-3.5 px-4">Descripción</th>
-                <th scope="col" class="py-3.5 px-4">Material</th>
-                <th scope="col" class="py-3.5 px-4 text-center">Cantidad</th>
-                <th scope="col" class="py-3.5 px-4 font-mono text-emerald-400">Tiempo Total Fabricado</th>
-                <th scope="col" class="py-3.5 px-4 text-xs">Fecha Inicio</th>
-                <th scope="col" class="py-3.5 px-4 text-xs">Fecha Término</th>
-                <th scope="col" class="py-3.5 px-4 text-right">Acciones</th>
+                <th scope="col" class="py-3 px-4 font-mono">Código 1</th>
+                <th scope="col" class="py-3 px-4 font-mono">Código 2</th>
+                <th scope="col" class="py-3 px-4">Descripción</th>
+                <th scope="col" class="py-3 px-4">Material</th>
+                <th scope="col" class="py-3 px-4 text-center">Cantidad</th>
+                <th scope="col" class="py-3 px-4 font-mono text-emerald-600 dark:text-emerald-400">Tiempo Total Fabricado</th>
+                <th scope="col" class="py-3 px-4 text-xs">Fecha Inicio</th>
+                <th scope="col" class="py-3 px-4 text-xs">Fecha Término</th>
+                <th scope="col" class="py-3 px-4 text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody id="lista-historial-body" class="divide-y divide-slate-800/60 bg-slate-900/30">
+            <tbody id="lista-historial-body" class="divide-y divide-zinc-200 dark:divide-zinc-800/60 bg-white dark:bg-zinc-900/30">
               <!-- Renderizado dinámico -->
               <tr>
-                <td colspan="9" class="py-12 text-center text-slate-500">
+                <td colspan="9" class="py-12 text-center text-zinc-400">
                   <div class="flex flex-col items-center justify-center space-y-2">
                     <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-emerald-500"></i>
                     <span>Cargando historial de trabajos...</span>
@@ -248,13 +248,13 @@ export async function refrescarHistorial(onRefreshIcons) {
     if (filtrados.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="8" class="py-12 text-center text-slate-500">
-            <div class="flex flex-col items-center justify-center space-y-3">
-              <div class="w-12 h-12 rounded-2xl bg-slate-800/60 flex items-center justify-center text-slate-400">
-                <i data-lucide="inbox" class="w-6 h-6"></i>
+          <td colspan="9" class="py-12 text-center text-zinc-400">
+            <div class="flex flex-col items-center justify-center space-y-2.5">
+              <div class="w-10 h-10 rounded-2xl bg-zinc-100 dark:bg-zinc-800/60 flex items-center justify-center text-zinc-400">
+                <i data-lucide="inbox" class="w-5 h-5"></i>
               </div>
-              <p class="text-sm font-medium text-slate-300">No hay registros en el historial con los filtros aplicados</p>
-              <p class="text-xs text-slate-500">
+              <p class="text-xs font-medium text-zinc-700 dark:text-zinc-300">No hay registros en el historial con los filtros aplicados</p>
+              <p class="text-[11px] text-zinc-400">
                 ${historialCache.length === 0 ? 'Cuando concluyas trabajos en la Pantalla 3 aparecerán aquí.' : 'Prueba modificando las fechas o criterios de búsqueda.'}
               </p>
             </div>
@@ -276,54 +276,54 @@ export async function refrescarHistorial(onRefreshIcons) {
           : '-';
 
         return `
-          <tr class="hover:bg-slate-800/40 transition-colors">
-            <td class="py-3 px-4 font-mono font-bold text-white whitespace-nowrap">
-              <span class="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20">
+          <tr class="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors">
+            <td class="py-2.5 px-4 font-mono font-bold text-zinc-900 dark:text-white whitespace-nowrap">
+              <span class="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 text-xs">
                 ${t.codigo1 || 'S/C'}
               </span>
             </td>
-            <td class="py-3 px-4 font-mono text-slate-300 text-xs whitespace-nowrap">
-              ${t.codigo2 ? `<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">${t.codigo2}</span>` : '<span class="text-slate-600">-</span>'}
+            <td class="py-2.5 px-4 font-mono text-zinc-500 dark:text-zinc-400 text-xs whitespace-nowrap">
+              ${t.codigo2 ? `<span class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">${t.codigo2}</span>` : '<span class="text-zinc-400 dark:text-zinc-600">-</span>'}
             </td>
-            <td class="py-3 px-4 font-medium text-slate-200">
+            <td class="py-2.5 px-4 font-medium text-zinc-800 dark:text-zinc-200">
               ${t.descripcion || '-'}
             </td>
-            <td class="py-3 px-4 whitespace-nowrap">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-cyan-300 border border-slate-700">
+            <td class="py-2.5 px-4 whitespace-nowrap">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
                 ${t.material || 'N/A'}
               </span>
             </td>
-            <td class="py-3 px-4 text-center font-mono font-bold text-white whitespace-nowrap">
+            <td class="py-2.5 px-4 text-center font-mono font-bold text-zinc-900 dark:text-white whitespace-nowrap">
               ${t.cantidad} u.
             </td>
-            <td class="py-3 px-4 font-mono font-bold text-emerald-400 whitespace-nowrap">
-              <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+            <td class="py-2.5 px-4 font-mono font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">
+              <span class="px-2.5 py-0.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs">
                 ${t.tiempoInfo.formateado}
               </span>
             </td>
-            <td class="py-3 px-4 text-xs text-slate-400 font-mono whitespace-nowrap">
+            <td class="py-2.5 px-4 text-xs text-zinc-500 dark:text-zinc-400 font-mono whitespace-nowrap">
               ${fechaInicio}
             </td>
-            <td class="py-3 px-4 text-xs text-slate-400 font-mono whitespace-nowrap">
+            <td class="py-2.5 px-4 text-xs text-zinc-500 dark:text-zinc-400 font-mono whitespace-nowrap">
               ${fechaTermino}
             </td>
-            <td class="py-3 px-4 text-right whitespace-nowrap">
+            <td class="py-2.5 px-4 text-right whitespace-nowrap">
               <div class="flex items-center justify-end space-x-1">
                 <button 
                   data-action="ver-intervalos" 
                   data-id="${t.id}" 
                   title="Ver detalle de intervalos de tiempo" 
-                  class="p-1.5 rounded-lg text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/10 transition-colors"
+                  class="p-1.5 rounded-lg text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
                 >
-                  <i data-lucide="list" class="w-4 h-4"></i>
+                  <i data-lucide="list" class="w-3.5 h-3.5"></i>
                 </button>
                 <button 
                   data-action="eliminar-historial" 
                   data-id="${t.id}" 
                   title="Eliminar del historial" 
-                  class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                  class="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors"
                 >
-                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
               </div>
             </td>

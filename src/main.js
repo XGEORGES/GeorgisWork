@@ -54,7 +54,7 @@ import { renderSeleccionView, setupSeleccionListeners, refrescarGridSeleccion } 
 import { renderControlView, setupControlListeners, refrescarControlTrabajos, detenerTimerLoop } from './views/control.js';
 import { renderHistorialView, setupHistorialListeners, refrescarHistorial } from './views/historial.js';
 import { renderHorasExtrasView, setupHorasExtrasListeners, refrescarHorasExtras } from './views/horasExtras.js';
-import { renderModalConfig, setupModalConfigListeners } from './components/modalConfig.js';
+import { renderModalConfig, setupModalConfigListeners, updateThemeSegmentedUI } from './components/modalConfig.js';
 
 // ============================================================================
 // Estado Global de la Aplicación
@@ -99,7 +99,9 @@ const appIcons = {
   Gauge,
   List,
   FileText,
-  Calculator
+  Calculator,
+  UploadCloud,
+  Lock
 };
 
 // ============================================================================
@@ -114,11 +116,11 @@ export function showToast(message, type = 'info') {
   if (!container) return;
 
   const toast = document.createElement('div');
-  const bgClass = type === 'success' ? 'bg-emerald-600 border-emerald-500' :
-                  type === 'error' ? 'bg-rose-600 border-rose-500' :
-                  'bg-slate-800 border-slate-700';
+  const bgClass = type === 'success' ? 'bg-emerald-600 dark:bg-emerald-600 text-white border-emerald-500' :
+                  type === 'error' ? 'bg-rose-600 dark:bg-rose-600 text-white border-rose-500' :
+                  'bg-zinc-900 text-zinc-100 dark:bg-zinc-800 dark:text-zinc-100 border-zinc-700';
 
-  toast.className = `${bgClass} text-white px-4 py-3 rounded-xl shadow-lg border text-sm flex items-center space-x-2 pointer-events-auto transform transition-all duration-300 translate-y-2 opacity-0`;
+  toast.className = `${bgClass} px-4 py-3 rounded-xl shadow-xl border text-xs font-medium flex items-center space-x-2 pointer-events-auto transform transition-all duration-300 translate-y-2 opacity-0`;
   toast.innerHTML = `<span>${message}</span>`;
   container.appendChild(toast);
 
@@ -135,23 +137,40 @@ export function showToast(message, type = 'info') {
 }
 
 // ============================================================================
-// Gestión del Tema Claro / Oscuro
+// Gestión del Tema Claro / Oscuro con Persistencia
 // ============================================================================
-async function initTheme() {
-  const savedTheme = await configService.get('theme', 'dark');
-  if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+export async function setAppTheme(theme) {
+  if (theme === 'dark') {
     document.documentElement.classList.add('dark');
   } else {
     document.documentElement.classList.remove('dark');
   }
+  
+  localStorage.setItem('georgiswork_theme', theme);
+  await configService.set('theme', theme);
+  showToast(`Modo ${theme === 'dark' ? 'Oscuro' : 'Claro'} activado`, 'info');
+  updateThemeSegmentedUI();
+  refreshIcons();
 }
 
-async function toggleTheme() {
-  const isDark = document.documentElement.classList.toggle('dark');
-  const newTheme = isDark ? 'dark' : 'light';
-  await configService.set('theme', newTheme);
-  showToast(`Modo ${newTheme === 'dark' ? 'Oscuro' : 'Claro'} activado`, 'info');
-  refreshIcons();
+async function initTheme() {
+  let savedTheme = localStorage.getItem('georgiswork_theme');
+  if (!savedTheme) {
+    savedTheme = await configService.get('theme', null);
+  }
+  
+  // Por defecto oscuro
+  if (!savedTheme) {
+    savedTheme = 'dark';
+  }
+
+  if (savedTheme === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+  
+  localStorage.setItem('georgiswork_theme', savedTheme);
 }
 
 // ============================================================================
@@ -175,7 +194,7 @@ export async function updateDBStatus() {
   const health = await checkDatabaseHealth();
   if (health.success) {
     if (pillEl) {
-      pillEl.className = 'text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30';
+      pillEl.className = 'text-xs px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-mono border border-emerald-500/30';
       pillEl.textContent = 'Conectada';
     }
     if (detailsEl) {
@@ -183,7 +202,7 @@ export async function updateDBStatus() {
     }
   } else {
     if (pillEl) {
-      pillEl.className = 'text-xs px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-mono border border-rose-500/30';
+      pillEl.className = 'text-xs px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400 font-mono border border-rose-500/30';
       pillEl.textContent = 'Error';
     }
     if (detailsEl) {
@@ -208,18 +227,18 @@ export async function navigateTo(viewKey) {
   // Actualizar botones de navegación desktop
   document.querySelectorAll('#desktop-nav .nav-tab').forEach(btn => {
     if (btn.getAttribute('data-nav') === viewKey) {
-      btn.className = 'nav-tab active flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-white bg-blue-600 shadow-sm shadow-blue-500/30';
+      btn.className = 'nav-tab active flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 text-zinc-900 dark:text-white bg-white dark:bg-zinc-800 shadow-sm border border-zinc-200/80 dark:border-zinc-700/60';
     } else {
-      btn.className = 'nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60';
+      btn.className = 'nav-tab flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-200/60 dark:hover:bg-zinc-800/50';
     }
   });
 
   // Actualizar botones de navegación móvil
   document.querySelectorAll('#mobile-nav .nav-tab-mobile').forEach(btn => {
     if (btn.getAttribute('data-nav') === viewKey) {
-      btn.className = 'nav-tab-mobile active px-3 py-1.5 rounded-lg text-xs font-medium text-white bg-blue-600 flex items-center space-x-1.5';
+      btn.className = 'nav-tab-mobile active px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-900 dark:text-white bg-white dark:bg-zinc-800 shadow-sm border border-zinc-200/80 dark:border-zinc-700/60 flex items-center space-x-1.5';
     } else {
-      btn.className = 'nav-tab-mobile px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 bg-slate-900 border border-slate-800 flex items-center space-x-1.5';
+      btn.className = 'nav-tab-mobile px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 flex items-center space-x-1.5';
     }
   });
 
@@ -291,12 +310,6 @@ function setupGlobalEventListeners() {
     });
   });
 
-  // Alternar Tema desde el Header
-  const themeToggle = document.getElementById('btn-theme-toggle');
-  if (themeToggle) {
-    themeToggle.addEventListener('click', toggleTheme);
-  }
-
   // Botón Test DB en el banner
   const testDbBtn = document.getElementById('btn-test-db');
   if (testDbBtn) {
@@ -307,7 +320,7 @@ function setupGlobalEventListeners() {
           codigo1: testCode,
           codigo2: 'PLANO-TEST',
           descripcion: 'Pieza de prueba rápida de IndexedDB',
-          material: 'Aluminio 6061-T6'
+          material: 'Aluminio 6061'
         });
         
         await updateDBStatus();
@@ -333,7 +346,7 @@ function setupGlobalEventListeners() {
     modalContainer.innerHTML = renderModalConfig();
     setupModalConfigListeners({
       onToast: showToast,
-      onThemeChange: toggleTheme,
+      onSetTheme: setAppTheme,
       onRefreshData: async () => {
         await updateDBStatus();
         if (activeView === 'catalogo') {
@@ -387,6 +400,7 @@ async function initApp() {
   registerServiceWorker();
   await navigateTo('catalogo');
   await updateDBStatus();
+  updateThemeSegmentedUI();
   refreshIcons();
   console.log('🚀 GeorgisWork CNC (Módulo 6: PWA & Offline) completamente activo.');
 }

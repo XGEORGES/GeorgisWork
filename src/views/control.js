@@ -4,26 +4,26 @@ let cronometroIntervalId = null;
 let trabajosActivosCache = [];
 
 /**
- * Renderiza la interfaz de la Pantalla 3 (Control en Vivo de Trabajos)
+ * Renderiza la interfaz de la Pantalla 3 (Control en Vivo de Trabajos - Estilo Linear/shadcn)
  */
 export function renderControlView() {
   return `
-    <div class="space-y-6 pb-12">
+    <div class="space-y-6 pb-16">
       
       <!-- Encabezado de la Pantalla 3 -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-bold text-slate-100 flex items-center gap-2.5">
+          <h1 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2.5">
             <i data-lucide="play-circle" class="w-7 h-7 text-amber-500"></i>
             <span>Control en Vivo de Trabajos CNC</span>
           </h1>
-          <p class="text-sm text-slate-400 mt-1">Monitoreo de producción en tiempo real, registro de intervalos y control de cronómetros.</p>
+          <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Monitoreo de producción en tiempo real, registro de intervalos y control de cronómetros.</p>
         </div>
 
         <!-- Indicador de Trabajos Activos -->
         <div class="flex items-center space-x-2">
-          <div class="px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-mono font-bold flex items-center space-x-2">
-            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+          <div class="px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-mono font-bold flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
             <span>Activos: <span id="contador-trabajos-activos">0</span></span>
           </div>
         </div>
@@ -32,9 +32,9 @@ export function renderControlView() {
       <!-- Contenedor de Trabajos en Proceso -->
       <div id="lista-trabajos-control" class="space-y-4">
         <!-- Renderizado dinámico -->
-        <div class="py-16 text-center text-slate-500 glass-card rounded-2xl p-8">
+        <div class="py-16 text-center text-zinc-400 glass-card rounded-2xl p-8 bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800">
           <i data-lucide="loader-2" class="w-8 h-8 animate-spin text-amber-500 mx-auto mb-3"></i>
-          <p class="text-sm font-medium text-slate-300">Cargando línea de producción...</p>
+          <p class="text-xs font-medium text-zinc-700 dark:text-zinc-300">Cargando línea de producción...</p>
         </div>
       </div>
 
@@ -56,13 +56,13 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
 
     if (trabajosActivosCache.length === 0) {
       container.innerHTML = `
-        <div class="py-16 text-center text-slate-500 glass-card rounded-2xl p-8">
-          <div class="w-16 h-16 rounded-3xl bg-slate-800/80 flex items-center justify-center text-amber-400 mx-auto mb-4 border border-slate-700/60 shadow-lg">
-            <i data-lucide="play-circle" class="w-8 h-8"></i>
+        <div class="py-16 text-center text-zinc-400 glass-card rounded-2xl p-8 bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+          <div class="w-14 h-14 rounded-2xl bg-zinc-100 dark:bg-zinc-800/80 flex items-center justify-center text-amber-500 mx-auto mb-3 border border-zinc-200 dark:border-zinc-700/60 shadow-sm">
+            <i data-lucide="play-circle" class="w-7 h-7"></i>
           </div>
-          <h3 class="text-base font-bold text-slate-200">No hay trabajos en la línea de producción</h3>
-          <p class="text-xs text-slate-400 mt-1.5 max-w-md mx-auto">
-            Ve a la <strong class="text-cyan-400 font-semibold">Pantalla 2 (Selección)</strong> para enviar piezas a fabricar.
+          <h3 class="text-sm font-bold text-zinc-900 dark:text-zinc-200">No hay trabajos en la línea de producción</h3>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1.5 max-w-md mx-auto">
+            Ve a la <strong class="text-blue-600 dark:text-blue-400 font-semibold">Pantalla 2 (Selección)</strong> para enviar piezas a fabricar.
           </p>
         </div>
       `;
@@ -93,22 +93,22 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
       let badgeHtml = '';
       if (isFabricando) {
         badgeHtml = `
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-sm shadow-emerald-500/10">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-1.5"></span>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1.5"></span>
             En Proceso
           </span>
         `;
       } else if (isPausado) {
         badgeHtml = `
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30">
-            <span class="w-2 h-2 rounded-full bg-amber-400 mr-1.5"></span>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+            <span class="w-2 h-2 rounded-full bg-amber-500 mr-1.5"></span>
             Pausado
           </span>
         `;
       } else {
         badgeHtml = `
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700">
-            <span class="w-2 h-2 rounded-full bg-slate-500 mr-1.5"></span>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700">
+            <span class="w-2 h-2 rounded-full bg-zinc-400 mr-1.5"></span>
             Pendiente
           </span>
         `;
@@ -128,7 +128,7 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
               type="button" 
               disabled
               title="Máquina ocupada: pausa el trabajo actual para iniciar otro"
-              class="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-600 border border-slate-700/50 flex items-center space-x-1.5 cursor-not-allowed opacity-50 select-none"
+              class="px-4 py-2.5 rounded-xl text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 border border-zinc-200 dark:border-zinc-700/50 flex items-center space-x-1.5 cursor-not-allowed opacity-60 select-none"
             >
               <i data-lucide="lock" class="w-4 h-4"></i>
               <span>${isPausado ? 'Reanudar' : 'Empezar'}</span>
@@ -140,7 +140,7 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
               type="button" 
               data-action="empezar" 
               data-id="${t.id}" 
-              class="px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-500/25 flex items-center space-x-1.5 transition-all transform active:scale-95"
+              class="px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-500/20 flex items-center space-x-1.5 transition-all transform active:scale-95 cursor-pointer"
             >
               <i data-lucide="play" class="w-4 h-4 fill-white"></i>
               <span>${isPausado ? 'Reanudar' : 'Empezar'}</span>
@@ -153,7 +153,7 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
             type="button" 
             data-action="pausar" 
             data-id="${t.id}" 
-            class="px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white shadow-lg shadow-amber-500/25 flex items-center space-x-1.5 transition-all transform active:scale-95"
+            class="px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white shadow-md shadow-amber-500/20 flex items-center space-x-1.5 transition-all transform active:scale-95 cursor-pointer"
           >
             <i data-lucide="pause" class="w-4 h-4 fill-white"></i>
             <span>Pausar</span>
@@ -161,42 +161,49 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
         `;
       }
 
+      // Tarjeta con resaltado moderno Linear
+      const cardBorderClass = isFabricando 
+        ? 'border-emerald-500/40 shadow-lg shadow-emerald-950/10 dark:shadow-emerald-950/30 ring-1 ring-emerald-500/20 bg-white dark:bg-zinc-900/90' 
+        : maquinaOcupadaPorOtro 
+          ? 'border-zinc-200 dark:border-zinc-800/50 bg-zinc-50/50 dark:bg-zinc-900/40 opacity-75' 
+          : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/70 shadow-sm';
+
       return `
-        <div class="glass-card rounded-2xl p-5 sm:p-6 border transition-all duration-300 ${isFabricando ? 'border-emerald-500/50 bg-slate-900/90 shadow-xl shadow-emerald-500/5 ring-1 ring-emerald-500/20' : maquinaOcupadaPorOtro ? 'border-slate-800/50 bg-slate-900/40 opacity-70' : 'border-slate-800 bg-slate-900/70'}">
+        <div class="rounded-2xl p-5 sm:p-6 border transition-all duration-300 ${cardBorderClass}">
           
           <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
             
             <!-- Columna Izquierda: Información de la Pieza & Cantidad -->
             <div class="space-y-2.5 flex-1">
-              <div class="flex flex-wrap items-center gap-2.5">
-                <span class="font-mono text-sm font-bold text-white px-2.5 py-1 rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/30">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="font-mono text-xs font-bold text-blue-600 dark:text-blue-400 px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20">
                   ${t.codigo1 || 'S/C'}
                 </span>
-                ${t.codigo2 ? `<span class="font-mono text-xs px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 font-semibold">${t.codigo2}</span>` : ''}
-                <span class="text-xs px-2.5 py-1 rounded-lg bg-slate-800 text-cyan-300 border border-slate-700 font-semibold">
+                ${t.codigo2 ? `<span class="font-mono text-xs px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700/60 font-semibold">${t.codigo2}</span>` : ''}
+                <span class="text-xs px-2.5 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 font-medium">
                   ${t.material || 'Material'}
                 </span>
                 ${badgeHtml}
-                ${maquinaOcupadaPorOtro ? `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800/60 text-slate-500 border border-slate-700/40"><i data-lucide="lock" class="w-3 h-3 mr-1"></i>Bloqueado</span>` : ''}
+                ${maquinaOcupadaPorOtro ? `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/60 text-zinc-500 border border-zinc-200 dark:border-zinc-700/40"><i data-lucide="lock" class="w-3 h-3 mr-1"></i>Bloqueado</span>` : ''}
               </div>
 
               <div>
-                <h3 class="text-base font-bold text-white tracking-tight">${t.descripcion}</h3>
-                <div class="flex items-center space-x-3 text-xs text-slate-400 mt-1">
-                  <span>Cantidad a fabricar: <strong class="text-white font-mono text-sm">${t.cantidad}</strong> unidades</span>
+                <h3 class="text-base font-bold text-zinc-900 dark:text-white tracking-tight">${t.descripcion}</h3>
+                <div class="flex items-center space-x-3 text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                  <span>Cantidad a fabricar: <strong class="text-zinc-900 dark:text-white font-mono text-sm">${t.cantidad}</strong> unidades</span>
                   <span>•</span>
-                  <span>Intervalos: <strong class="text-slate-300 font-mono">${t.intervalos.length}</strong></span>
+                  <span>Intervalos: <strong class="text-zinc-700 dark:text-zinc-300 font-mono">${t.intervalos.length}</strong></span>
                 </div>
               </div>
             </div>
 
-            <!-- Columna Central: Cronómetro en Vivo -->
-            <div class="flex flex-col items-center justify-center px-6 py-3.5 rounded-2xl bg-slate-950/80 border border-slate-800/90 min-w-[200px]">
-              <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-0.5">Tiempo Neto Trabajado</span>
-              <div class="font-mono text-2xl font-bold tracking-tight ${isFabricando ? 'text-emerald-400 animate-pulse' : 'text-slate-200'}">
+            <!-- Columna Central: Cronómetro en Vivo (Display Grande 5xl Monospace) -->
+            <div class="flex flex-col items-center justify-center px-6 py-4 rounded-2xl bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800 min-w-[240px]">
+              <span class="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">Tiempo Neto Trabajado</span>
+              <div class="font-mono text-4xl sm:text-5xl font-bold tracking-tight ${isFabricando ? 'text-emerald-600 dark:text-emerald-400 animate-pulse' : 'text-zinc-900 dark:text-zinc-100'}">
                 ${t.tiempoInfo.formateado}
               </div>
-              <span class="text-[10px] text-slate-500 font-mono mt-0.5">
+              <span class="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono mt-1">
                 ${formatearSegundosExactos(t.tiempoInfo.totalMs)}
               </span>
             </div>
@@ -212,7 +219,7 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
                 data-action="terminar" 
                 data-id="${t.id}" 
                 ${!puedeTerminar ? 'disabled title="Debes iniciar el trabajo al menos una vez antes de terminarlo"' : ''}
-                class="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition-all ${puedeTerminar ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/25 active:scale-95 cursor-pointer' : 'bg-slate-800 text-slate-500 border border-slate-700/50 cursor-not-allowed opacity-60'}"
+                class="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition-all ${puedeTerminar ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-500/20 active:scale-95 cursor-pointer' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 border border-zinc-200 dark:border-zinc-700/50 cursor-not-allowed opacity-60'}"
               >
                 <i data-lucide="check" class="w-4 h-4"></i>
                 <span>Terminar</span>
@@ -224,7 +231,7 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
                 data-action="eliminar-trabajo" 
                 data-id="${t.id}" 
                 title="Descartar este trabajo de la línea" 
-                class="p-2.5 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                class="p-2.5 rounded-xl text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors"
               >
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>

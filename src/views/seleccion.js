@@ -6,33 +6,33 @@ let piezasDisponibles = [];
 let filtroBusqueda = '';
 
 /**
- * Renderiza la interfaz de la Pantalla 2 (Selección de Piezas)
+ * Renderiza la interfaz de la Pantalla 2 (Selección de Piezas - Estilo Linear/shadcn)
  */
 export function renderSeleccionView() {
   return `
-    <div class="space-y-6 pb-20">
+    <div class="space-y-6 pb-24">
       
       <!-- Encabezado de la Pantalla 2 -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-bold text-slate-100 flex items-center gap-2.5">
-            <i data-lucide="check-square" class="w-7 h-7 text-cyan-500"></i>
+          <h1 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2.5">
+            <i data-lucide="check-square" class="w-7 h-7 text-blue-600 dark:text-blue-500"></i>
             <span>Selección de Piezas para Fabricar</span>
           </h1>
-          <p class="text-sm text-slate-400 mt-1">Elige las piezas y cantidades a enviar a la línea de mecanizado CNC.</p>
+          <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Elige las piezas y cantidades a enviar a la línea de mecanizado CNC.</p>
         </div>
 
         <div class="flex items-center gap-3">
-          <button id="btn-limpiar-seleccion" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-slate-200 bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 transition-colors">
+          <button id="btn-limpiar-seleccion" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 bg-zinc-100 dark:bg-zinc-800/80 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700/60 transition-colors active:scale-95">
             Limpiar Selección
           </button>
         </div>
       </div>
 
       <!-- Barra de Búsqueda Rápida -->
-      <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 flex items-center justify-between gap-4">
+      <div class="p-3.5 rounded-2xl bg-white dark:bg-zinc-900/70 border border-zinc-200 dark:border-zinc-800 shadow-sm flex items-center justify-between gap-4 transition-colors">
         <div class="relative flex-1">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-500">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-zinc-400">
             <i data-lucide="search" class="w-4 h-4"></i>
           </span>
           <input 
@@ -40,41 +40,41 @@ export function renderSeleccionView() {
             id="filtro-seleccion" 
             placeholder="Buscar por código, descripción o material..." 
             value="${filtroBusqueda}"
-            class="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950/80 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
+            class="w-full pl-9 pr-4 py-2 rounded-lg bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 text-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors"
           />
         </div>
-        <div class="text-xs text-slate-400 font-mono hidden sm:block">
-          Seleccionadas: <span id="contador-seleccionadas" class="text-cyan-400 font-bold">0</span> piezas
+        <div class="text-xs text-zinc-500 dark:text-zinc-400 font-mono hidden sm:block">
+          Seleccionadas: <span id="contador-seleccionadas" class="text-blue-600 dark:text-blue-400 font-bold">0</span> piezas
         </div>
       </div>
 
       <!-- Grid de Tarjetas de Piezas del Catálogo -->
       <div id="grid-piezas-seleccion" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <!-- Renderizado dinámico -->
-        <div class="col-span-full py-12 text-center text-slate-500">
-          <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-cyan-500 mx-auto mb-2"></i>
+        <div class="col-span-full py-12 text-center text-zinc-400">
+          <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-blue-500 mx-auto mb-2"></i>
           <span>Cargando piezas disponibles...</span>
         </div>
       </div>
 
       <!-- Barra Flotante Inferior de Envío a Producción -->
       <div id="barra-flotante-envio" class="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-2xl px-4 z-30 transition-all duration-300 transform translate-y-24 opacity-0">
-        <div class="glass-panel p-4 rounded-2xl border border-cyan-500/40 bg-slate-900/95 shadow-2xl flex items-center justify-between gap-4">
+        <div class="glass-panel p-4 rounded-2xl border border-zinc-300 dark:border-zinc-700 bg-white/95 dark:bg-zinc-900/95 shadow-2xl flex items-center justify-between gap-4">
           <div class="flex items-center space-x-3">
-            <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+            <div class="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
               <i data-lucide="layers" class="w-5 h-5"></i>
             </div>
             <div>
-              <div class="text-sm font-bold text-white">
-                <span id="resumen-total-piezas">0</span> tipos de pieza (<span id="resumen-total-unidades" class="text-cyan-400">0</span> unidades)
+              <div class="text-sm font-bold text-zinc-900 dark:text-white">
+                <span id="resumen-total-piezas">0</span> tipos de pieza (<span id="resumen-total-unidades" class="text-blue-600 dark:text-blue-400">0</span> unidades)
               </div>
-              <div class="text-xs text-slate-400">Listo para enviar a la cola de Control en Vivo</div>
+              <div class="text-xs text-zinc-500 dark:text-zinc-400">Listo para enviar a la cola de Control en Vivo</div>
             </div>
           </div>
 
           <button 
             id="btn-enviar-produccion" 
-            class="px-5 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white shadow-lg shadow-cyan-500/25 flex items-center space-x-2 transition-all transform active:scale-95"
+            class="px-5 py-2.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-500/20 flex items-center space-x-2 transition-all transform active:scale-95"
           >
             <i data-lucide="play" class="w-4 h-4 fill-white"></i>
             <span>Enviar a Fabricar</span>
@@ -107,12 +107,12 @@ export async function refrescarGridSeleccion(onRefreshIcons) {
 
     if (filtradas.length === 0) {
       grid.innerHTML = `
-        <div class="col-span-full py-12 text-center text-slate-500 glass-card rounded-2xl p-8">
-          <div class="w-12 h-12 rounded-2xl bg-slate-800/60 flex items-center justify-center text-slate-400 mx-auto mb-3">
-            <i data-lucide="inbox" class="w-6 h-6"></i>
+        <div class="col-span-full py-12 text-center text-zinc-400 glass-card rounded-2xl p-8 bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800">
+          <div class="w-10 h-10 rounded-2xl bg-zinc-100 dark:bg-zinc-800/60 flex items-center justify-center text-zinc-400 mx-auto mb-3">
+            <i data-lucide="inbox" class="w-5 h-5"></i>
           </div>
-          <p class="text-sm font-medium text-slate-300">No hay piezas en el catálogo</p>
-          <p class="text-xs text-slate-500 mt-1">Primero añade piezas en la Pantalla 1 (Catálogo) para poder seleccionarlas.</p>
+          <p class="text-xs font-medium text-zinc-700 dark:text-zinc-300">No hay piezas en el catálogo</p>
+          <p class="text-[11px] text-zinc-400 mt-1">Primero añade piezas en la Pantalla 1 (Catálogo) para poder seleccionarlas.</p>
         </div>
       `;
       actualizarBarraFlotante();
@@ -124,17 +124,17 @@ export async function refrescarGridSeleccion(onRefreshIcons) {
       const cantidadActual = estaSeleccionada ? seleccionPiezas[pieza.id].cantidad : 1;
 
       return `
-        <div class="glass-card rounded-2xl p-5 border transition-all duration-200 ${estaSeleccionada ? 'border-cyan-500/80 bg-slate-800/80 shadow-md shadow-cyan-500/10' : 'border-slate-800 bg-slate-900/60 hover:border-slate-700'}">
+        <div class="rounded-2xl p-5 border transition-all duration-200 shadow-sm ${estaSeleccionada ? 'border-blue-500 bg-blue-50/50 dark:bg-zinc-900 ring-1 ring-blue-500/20' : 'border-zinc-200 dark:border-zinc-800/90 bg-white dark:bg-zinc-900/70 hover:border-zinc-300 dark:hover:border-zinc-700'}">
           
           <div class="flex items-start justify-between gap-2 mb-3">
             <div>
               <div class="flex items-center space-x-2">
-                <span class="font-mono text-sm font-bold text-white px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                <span class="font-mono text-xs font-bold text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20">
                   ${pieza.codigo1 || 'S/C'}
                 </span>
-                ${pieza.codigo2 ? `<span class="font-mono text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">${pieza.codigo2}</span>` : ''}
+                ${pieza.codigo2 ? `<span class="font-mono text-xs px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700/60">${pieza.codigo2}</span>` : ''}
               </div>
-              <h3 class="text-sm font-semibold text-slate-200 mt-2 line-clamp-1">${pieza.descripcion}</h3>
+              <h3 class="text-xs font-semibold text-zinc-900 dark:text-zinc-100 mt-2 line-clamp-1">${pieza.descripcion}</h3>
             </div>
             
             <!-- Checkbox de selección rápida -->
@@ -142,28 +142,28 @@ export async function refrescarGridSeleccion(onRefreshIcons) {
               type="button" 
               data-action="toggle-check" 
               data-id="${pieza.id}" 
-              class="w-6 h-6 rounded-lg flex items-center justify-center border transition-all ${estaSeleccionada ? 'bg-cyan-600 border-cyan-500 text-white' : 'bg-slate-950 border-slate-700 text-transparent hover:border-slate-500'}"
+              class="w-6 h-6 rounded-lg flex items-center justify-center border transition-all ${estaSeleccionada ? 'bg-blue-600 border-blue-500 text-white' : 'bg-zinc-100 dark:bg-zinc-950 border-zinc-300 dark:border-zinc-700 text-transparent hover:border-zinc-400 dark:hover:border-zinc-500'}"
             >
-              <i data-lucide="check" class="w-4 h-4"></i>
+              <i data-lucide="check" class="w-3.5 h-3.5"></i>
             </button>
           </div>
 
           <div class="mb-4">
-            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-800 text-cyan-300 border border-slate-700">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
               ${pieza.material}
             </span>
           </div>
 
           <!-- Control de Cantidad -->
-          <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-xs text-slate-400 font-medium">Cantidad a fabricar:</span>
+          <div class="pt-3 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
+            <span class="text-xs text-zinc-500 dark:text-zinc-400 font-medium">Cantidad a fabricar:</span>
             
-            <div class="flex items-center space-x-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800">
+            <div class="flex items-center space-x-1 bg-zinc-100 dark:bg-zinc-950 p-1 rounded-xl border border-zinc-200 dark:border-zinc-800">
               <button 
                 type="button" 
                 data-action="dec-qty" 
                 data-id="${pieza.id}" 
-                class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center text-sm font-bold transition-colors"
+                class="w-6 h-6 rounded-lg bg-white dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 flex items-center justify-center text-xs font-bold transition-colors shadow-sm"
               >
                 -
               </button>
@@ -174,13 +174,13 @@ export async function refrescarGridSeleccion(onRefreshIcons) {
                 data-action="input-qty" 
                 data-id="${pieza.id}" 
                 value="${cantidadActual}" 
-                class="w-12 text-center bg-transparent text-sm font-mono font-bold text-white focus:outline-none"
+                class="w-10 text-center bg-transparent text-xs font-mono font-bold text-zinc-900 dark:text-white focus:outline-none"
               />
               <button 
                 type="button" 
                 data-action="inc-qty" 
                 data-id="${pieza.id}" 
-                class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center text-sm font-bold transition-colors"
+                class="w-6 h-6 rounded-lg bg-white dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 flex items-center justify-center text-xs font-bold transition-colors shadow-sm"
               >
                 +
               </button>
@@ -318,7 +318,7 @@ export function setupSeleccionListeners({ onToast, onRefreshIcons, onNavigateToC
     });
   }
 
-  // Enviar a Fabricar con Lógica de Fusión (Regla Crítica A)
+  // Enviar a Fabricar con Lógica de Fusión
   if (btnEnviar) {
     btnEnviar.addEventListener('click', async () => {
       const items = Object.values(seleccionPiezas);
