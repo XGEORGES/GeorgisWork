@@ -25,7 +25,7 @@ export const MATERIALES_CNC = [
 ];
 
 /**
- * Renderiza la vista completa del Catálogo (Pantalla 1 - Estilo Syntrix / Industrial Telemetry)
+ * Renderiza la vista completa del Catálogo (Pantalla 1 - Estilo Syntrix / Industrial Dark Telemetry)
  */
 export function renderCatalogoView() {
   return `
@@ -34,15 +34,15 @@ export function renderCatalogoView() {
       <!-- Encabezado de la Pantalla 1 -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
-            <i data-lucide="layers" class="w-7 h-7 text-cyan-600 dark:text-cyan-400"></i>
+          <h1 class="text-2xl font-bold text-white flex items-center gap-2.5">
+            <i data-lucide="layers" class="w-7 h-7 text-cyan-400"></i>
             <span>Catálogo de Piezas Maestras</span>
           </h1>
-          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Registra, administra y edita las piezas a procesar en las máquinas CNC.</p>
+          <p class="text-sm text-slate-400 mt-1">Registra, administra y edita las piezas a procesar en las máquinas CNC.</p>
         </div>
         
         <div class="flex items-center gap-3">
-          <button id="btn-toggle-form" class="px-4 py-2.5 rounded-xl text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-white shadow-md shadow-cyan-500/20 transition-all active:scale-95 flex items-center space-x-2 cursor-pointer">
+          <button id="btn-toggle-form" class="bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-medium px-4 py-2 rounded-xl active:scale-95 transition-all flex items-center space-x-2 cursor-pointer shadow-sm">
             <i data-lucide="plus" class="w-4 h-4"></i>
             <span id="btn-toggle-form-text">Nueva Pieza</span>
           </button>
@@ -51,15 +51,15 @@ export function renderCatalogoView() {
 
       <!-- Formulario de Registro / Edición de Pieza -->
       <div id="form-pieza-container" class="hidden transition-all duration-300">
-        <div class="glass-card p-6 rounded-2xl border border-slate-200/90 dark:border-slate-800/80 shadow-xl bg-white/95 dark:bg-[#111827]/90 relative">
-          <div class="flex items-center justify-between pb-4 mb-5 border-b border-slate-200 dark:border-slate-800">
+        <div class="bg-slate-900/65 backdrop-blur-2xl border border-slate-800/80 rounded-2xl shadow-2xl shadow-black/60 p-6 relative">
+          <div class="flex items-center justify-between pb-4 mb-5 border-b border-slate-800/80">
             <div class="flex items-center space-x-2.5">
-              <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+              <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                 <i data-lucide="pen-tool" class="w-4 h-4"></i>
               </div>
-              <h2 id="form-title" class="text-base font-bold text-slate-900 dark:text-white">Registrar Nueva Pieza</h2>
+              <h2 id="form-title" class="text-base font-bold text-white">Registrar Nueva Pieza</h2>
             </div>
-            <button id="btn-cancel-form" type="button" class="text-slate-400 hover:text-slate-900 dark:hover:text-white p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <button id="btn-cancel-form" type="button" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800/60 transition-colors cursor-pointer">
               <i data-lucide="x" class="w-5 h-5"></i>
             </button>
           </div>
@@ -70,33 +70,33 @@ export function renderCatalogoView() {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Código 1 -->
               <div>
-                <label for="codigo1" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  Código 1 (Principal / Parte) <span class="text-rose-500">*</span>
+                <label for="codigo1" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                  Código 1 (Principal / Parte) <span class="text-rose-400">*</span>
                 </label>
                 <div class="relative">
-                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400 font-mono text-xs">#</span>
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-500 font-mono text-xs">#</span>
                   <input 
                     type="text" 
                     id="codigo1" 
                     required 
                     placeholder="Ej. PZ-1001" 
-                    class="w-full pl-8 pr-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs font-mono focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-colors"
+                    class="w-full pl-8 pr-4 py-2.5 rounded-xl bg-slate-950/60 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-slate-100 text-sm font-mono placeholder-slate-500 shadow-inner transition-colors"
                   />
                 </div>
               </div>
 
               <!-- Código 2 -->
               <div>
-                <label for="codigo2" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                <label for="codigo2" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
                   Código 2 (Plano / Secundario)
                 </label>
                 <div class="relative">
-                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400 font-mono text-xs">DWG</span>
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-500 font-mono text-xs">DWG</span>
                   <input 
                     type="text" 
                     id="codigo2" 
                     placeholder="Ej. DWG-A-042" 
-                    class="w-full pl-12 pr-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs font-mono focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-colors"
+                    class="w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-950/60 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-slate-100 text-sm font-mono placeholder-slate-500 shadow-inner transition-colors"
                   />
                 </div>
               </div>
@@ -105,13 +105,13 @@ export function renderCatalogoView() {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Material -->
               <div>
-                <label for="material-select" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  Material <span class="text-rose-500">*</span>
+                <label for="material-select" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                  Material <span class="text-rose-400">*</span>
                 </label>
                 <div class="space-y-2">
                   <select 
                     id="material-select" 
-                    class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white text-xs focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-colors"
+                    class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/60 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-slate-100 text-sm shadow-inner transition-colors"
                   >
                     ${MATERIALES_CNC.map(m => `<option value="${m}">${m}</option>`).join('')}
                   </select>
@@ -119,22 +119,22 @@ export function renderCatalogoView() {
                     type="text" 
                     id="material-custom" 
                     placeholder="Especificar otro material..." 
-                    class="hidden w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-500 transition-colors"
+                    class="hidden w-full px-4 py-2.5 rounded-xl bg-slate-950/60 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-slate-100 text-sm placeholder-slate-500 shadow-inner transition-colors"
                   />
                 </div>
               </div>
 
               <!-- Descripción -->
               <div>
-                <label for="descripcion" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  Descripción de la Pieza <span class="text-rose-500">*</span>
+                <label for="descripcion" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                  Descripción de la Pieza <span class="text-rose-400">*</span>
                 </label>
                 <input 
                   type="text" 
                   id="descripcion" 
                   required 
                   placeholder="Ej. Brida de acople con chavetero 30mm" 
-                  class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-colors"
+                  class="w-full px-4 py-2.5 rounded-xl bg-slate-950/60 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-slate-100 text-sm placeholder-slate-500 shadow-inner transition-colors"
                 />
               </div>
             </div>
@@ -144,14 +144,14 @@ export function renderCatalogoView() {
               <button 
                 type="button" 
                 id="btn-cancel-form-bottom" 
-                class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 transition-colors active:scale-95 cursor-pointer"
+                class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors active:scale-95 cursor-pointer"
               >
                 Cancelar
               </button>
               <button 
                 type="submit" 
                 id="btn-save-pieza" 
-                class="px-5 py-2 rounded-xl text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-white shadow-md shadow-cyan-500/20 transition-all active:scale-95 flex items-center space-x-1.5 cursor-pointer"
+                class="px-5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 shadow-lg shadow-cyan-500/20 active:scale-95 transition-all flex items-center space-x-1.5 cursor-pointer"
               >
                 <i data-lucide="check" class="w-4 h-4"></i>
                 <span id="btn-save-text">Guardar Pieza</span>
@@ -162,11 +162,11 @@ export function renderCatalogoView() {
       </div>
 
       <!-- Barra de Filtros y Búsqueda -->
-      <div class="glass-panel p-3.5 rounded-2xl border border-slate-200/90 dark:border-slate-800/80 shadow-md flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 transition-colors">
+      <div class="bg-slate-900/65 backdrop-blur-2xl border border-slate-800/80 rounded-2xl shadow-2xl shadow-black/60 p-3.5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 transition-colors">
         
         <!-- Input de Búsqueda rápida -->
         <div class="relative flex-1">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
             <i data-lucide="search" class="w-4 h-4"></i>
           </span>
           <input 
@@ -174,10 +174,10 @@ export function renderCatalogoView() {
             id="filtro-busqueda" 
             placeholder="Buscar por código, descripción o plano..." 
             value="${filtroTexto}"
-            class="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-colors"
+            class="w-full pl-10 pr-9 py-2.5 rounded-xl bg-slate-950/60 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-slate-100 text-sm placeholder-slate-500 shadow-inner transition-colors"
           />
           ${filtroTexto ? `
-            <button id="btn-clear-search" class="absolute inset-y-0 right-0 flex items-center pr-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+            <button id="btn-clear-search" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-white cursor-pointer">
               <i data-lucide="x" class="w-3.5 h-3.5"></i>
             </button>
           ` : ''}
@@ -185,13 +185,13 @@ export function renderCatalogoView() {
 
         <!-- Filtro por Material -->
         <div class="flex items-center space-x-2">
-          <label for="filtro-material" class="text-xs font-semibold text-slate-500 dark:text-slate-400 whitespace-nowrap flex items-center space-x-1">
-            <i data-lucide="filter" class="w-3.5 h-3.5 text-cyan-500"></i>
+          <label for="filtro-material" class="text-xs font-semibold text-slate-400 whitespace-nowrap flex items-center space-x-1">
+            <i data-lucide="filter" class="w-3.5 h-3.5 text-cyan-400"></i>
             <span>Material:</span>
           </label>
           <select 
             id="filtro-material" 
-            class="px-2.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-cyan-500 transition-colors"
+            class="px-3 py-2 rounded-xl bg-slate-950/60 border border-slate-800 focus:border-cyan-500 text-xs text-slate-200 shadow-inner transition-colors"
           >
             <option value="todos" ${filtroMaterial === 'todos' ? 'selected' : ''}>Todos los materiales</option>
             ${MATERIALES_CNC.map(m => `<option value="${m}" ${filtroMaterial === m ? 'selected' : ''}>${m}</option>`).join('')}
@@ -199,16 +199,16 @@ export function renderCatalogoView() {
         </div>
 
         <!-- Total Badge -->
-        <div class="flex items-center justify-end px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 font-mono">
-          Total: <span id="contador-piezas" class="ml-1 text-cyan-600 dark:text-cyan-400 font-bold">0</span>
+        <div class="flex items-center justify-end px-3.5 py-1.5 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-400 font-mono">
+          Total: <span id="contador-piezas" class="ml-1 text-cyan-400 font-bold">0</span>
         </div>
       </div>
 
-      <!-- Tabla / Lista de Piezas (Estilo Syntrix) -->
-      <div class="glass-panel rounded-2xl overflow-hidden border border-slate-200/90 dark:border-slate-800/80 shadow-xl">
+      <!-- Tabla de Piezas Maestras (Syntrix Glassmorphism) -->
+      <div class="bg-slate-900/65 backdrop-blur-2xl border border-slate-800/80 rounded-2xl shadow-2xl shadow-black/60 overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300">
-            <thead class="bg-slate-50 dark:bg-slate-950/80 text-xs uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider border-b border-slate-200 dark:border-slate-800">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950/60 text-xs uppercase font-semibold text-slate-400 tracking-wider border-b border-slate-800/80">
               <tr>
                 <th scope="col" class="py-3.5 px-4 font-mono">Código 1</th>
                 <th scope="col" class="py-3.5 px-4 font-mono">Código 2</th>
@@ -218,12 +218,12 @@ export function renderCatalogoView() {
                 <th scope="col" class="py-3.5 px-4 text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody id="lista-piezas-body" class="divide-y divide-slate-200 dark:divide-slate-800/60 bg-white/70 dark:bg-slate-900/30">
+            <tbody id="lista-piezas-body" class="divide-y divide-slate-800/40">
               <!-- Renderizado dinámico -->
               <tr>
-                <td colspan="6" class="py-12 text-center text-slate-400">
+                <td colspan="6" class="py-12 text-center text-slate-500">
                   <div class="flex flex-col items-center justify-center space-y-2">
-                    <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-cyan-500"></i>
+                    <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-cyan-400"></i>
                     <span>Cargando catálogo de piezas...</span>
                   </div>
                 </td>
@@ -270,13 +270,13 @@ export async function refrescarListaPiezas(onDataChangeCallback) {
     if (filtradas.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="6" class="py-12 text-center text-slate-400">
+          <td colspan="6" class="py-12 text-center text-slate-500">
             <div class="flex flex-col items-center justify-center space-y-2.5">
-              <div class="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800/60 flex items-center justify-center text-slate-400">
+              <div class="w-10 h-10 rounded-2xl bg-slate-800/60 flex items-center justify-center text-slate-400">
                 <i data-lucide="inbox" class="w-5 h-5"></i>
               </div>
-              <p class="text-xs font-medium text-slate-700 dark:text-slate-300">No se encontraron piezas registradas</p>
-              <p class="text-[11px] text-slate-400">
+              <p class="text-xs font-medium text-slate-300">No se encontraron piezas registradas</p>
+              <p class="text-[11px] text-slate-500">
                 ${piezasCache.length === 0 ? 'Haz clic en "Nueva Pieza" para registrar la primera.' : 'Prueba cambiando los criterios de búsqueda o filtro.'}
               </p>
             </div>
@@ -290,24 +290,24 @@ export async function refrescarListaPiezas(onDataChangeCallback) {
           : '-';
 
         return `
-          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors group">
-            <td class="py-3 px-4 font-mono font-bold text-slate-900 dark:text-white whitespace-nowrap">
-              <span class="px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20 text-xs font-mono">
+          <tr class="border-b border-slate-800/40 hover:bg-slate-800/40 transition-colors group">
+            <td class="py-3 px-4 font-mono font-bold text-white whitespace-nowrap">
+              <span class="px-2.5 py-0.5 rounded-md bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono">
                 ${pieza.codigo1 || '-'}
               </span>
             </td>
-            <td class="py-3 px-4 font-mono text-slate-500 dark:text-slate-400 text-xs whitespace-nowrap">
-              ${pieza.codigo2 ? `<span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 font-mono">${pieza.codigo2}</span>` : '<span class="text-slate-400 dark:text-slate-600">-</span>'}
+            <td class="py-3 px-4 font-mono text-slate-400 text-xs whitespace-nowrap">
+              ${pieza.codigo2 ? `<span class="px-2.5 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60 font-mono">${pieza.codigo2}</span>` : '<span class="text-slate-600">-</span>'}
             </td>
-            <td class="py-3 px-4 font-medium text-slate-800 dark:text-slate-200">
+            <td class="py-3 px-4 font-medium text-slate-200">
               ${pieza.descripcion || '-'}
             </td>
             <td class="py-3 px-4 whitespace-nowrap">
-              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+              <span class="bg-slate-800/70 border border-slate-700/50 text-cyan-300 font-mono text-xs px-3 py-1 rounded-full shadow-inner inline-flex items-center">
                 ${pieza.material || 'N/A'}
               </span>
             </td>
-            <td class="py-3 px-4 text-xs text-slate-500 dark:text-slate-400 font-mono whitespace-nowrap">
+            <td class="py-3 px-4 text-xs text-slate-400 font-mono whitespace-nowrap">
               ${fecha}
             </td>
             <td class="py-3 px-4 text-right whitespace-nowrap">
@@ -316,7 +316,7 @@ export async function refrescarListaPiezas(onDataChangeCallback) {
                   data-action="edit" 
                   data-id="${pieza.id}" 
                   title="Editar pieza" 
-                  class="p-1.5 rounded-lg text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-500/10 transition-colors cursor-pointer"
+                  class="p-1.5 rounded-lg text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/10 transition-colors cursor-pointer"
                 >
                   <i data-lucide="edit" class="w-3.5 h-3.5"></i>
                 </button>
@@ -324,7 +324,7 @@ export async function refrescarListaPiezas(onDataChangeCallback) {
                   data-action="delete" 
                   data-id="${pieza.id}" 
                   title="Eliminar pieza" 
-                  class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors cursor-pointer"
+                  class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
                 >
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>

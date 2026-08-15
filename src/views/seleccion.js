@@ -6,7 +6,7 @@ let piezasDisponibles = [];
 let filtroBusqueda = '';
 
 /**
- * Renderiza la interfaz de la Pantalla 2 (Selección de Piezas - Vista Tabla Estilo Syntrix)
+ * Renderiza la interfaz de la Pantalla 2 (Selección de Piezas - Vista Tabla Estilo Syntrix / Dark Telemetry)
  */
 export function renderSeleccionView() {
   const numSeleccionadas = Object.keys(seleccionPiezas).length;
@@ -17,29 +17,29 @@ export function renderSeleccionView() {
       <!-- Encabezado de la Pantalla 2 -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
-            <i data-lucide="check-square" class="w-7 h-7 text-cyan-600 dark:text-cyan-400"></i>
+          <h1 class="text-2xl font-bold text-white flex items-center gap-2.5">
+            <i data-lucide="check-square" class="w-7 h-7 text-cyan-400"></i>
             <span>Selección de Piezas para Fabricar</span>
           </h1>
-          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Elige las piezas y define las cantidades a enviar a la línea de mecanizado CNC.</p>
+          <p class="text-sm text-slate-400 mt-1">Elige las piezas y define las cantidades a enviar a la línea de mecanizado CNC.</p>
         </div>
 
-        <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-2.5 flex-wrap">
           <button 
             id="btn-limpiar-seleccion" 
-            class="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/60 transition-colors active:scale-95 cursor-pointer"
+            class="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 transition-colors active:scale-95 cursor-pointer"
           >
             Limpiar Selección
           </button>
 
-          <!-- Botón Principal Destacado en Barra Superior -->
+          <!-- Botón Principal Destacado en Barra Superior con Gradiente Luminoso -->
           <button 
             id="btn-enviar-top" 
-            class="px-4 py-2 rounded-xl text-xs font-bold bg-cyan-600 hover:bg-cyan-500 text-white shadow-md shadow-cyan-500/25 flex items-center space-x-2 transition-all transform active:scale-95 cursor-pointer"
+            class="bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-bold px-5 py-2 rounded-xl shadow-lg shadow-cyan-500/20 active:scale-95 transition-all flex items-center space-x-2 cursor-pointer text-xs"
           >
-            <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+            <i data-lucide="play" class="w-4 h-4 fill-slate-950"></i>
             <span>Enviar Seleccionadas a Control en Vivo</span>
-            <span id="badge-contador-top" class="px-2 py-0.5 rounded-full bg-cyan-800/60 text-cyan-200 font-mono text-[11px] font-bold border border-cyan-400/30">
+            <span id="badge-contador-top" class="px-2 py-0.5 rounded-full bg-slate-950/30 text-slate-950 font-mono text-[11px] font-extrabold border border-slate-950/20">
               ${numSeleccionadas}
             </span>
           </button>
@@ -47,9 +47,9 @@ export function renderSeleccionView() {
       </div>
 
       <!-- Barra de Filtros y Búsqueda Reactiva -->
-      <div class="glass-panel p-3.5 rounded-2xl border border-slate-200/90 dark:border-slate-800/80 shadow-md flex items-center justify-between gap-4 transition-colors">
+      <div class="bg-slate-900/65 backdrop-blur-2xl border border-slate-800/80 rounded-2xl shadow-2xl shadow-black/60 p-3.5 flex items-center justify-between gap-4 transition-colors">
         <div class="relative flex-1">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
             <i data-lucide="search" class="w-4 h-4"></i>
           </span>
           <input 
@@ -57,25 +57,25 @@ export function renderSeleccionView() {
             id="filtro-seleccion" 
             placeholder="Buscar por código, descripción o material..." 
             value="${filtroBusqueda}"
-            class="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-colors"
+            class="w-full pl-10 pr-9 py-2.5 rounded-xl bg-slate-950/60 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-slate-100 text-sm placeholder-slate-500 shadow-inner transition-colors"
           />
           ${filtroBusqueda ? `
-            <button id="btn-clear-search-sel" class="absolute inset-y-0 right-0 flex items-center pr-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+            <button id="btn-clear-search-sel" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-white cursor-pointer">
               <i data-lucide="x" class="w-3.5 h-3.5"></i>
             </button>
           ` : ''}
         </div>
         
-        <div class="flex items-center justify-end px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 font-mono">
-          Marcadas: <span id="contador-seleccionadas" class="ml-1 text-cyan-600 dark:text-cyan-400 font-bold">${numSeleccionadas}</span>
+        <div class="flex items-center justify-end px-3.5 py-1.5 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-400 font-mono">
+          Marcadas: <span id="contador-seleccionadas" class="ml-1 text-cyan-400 font-bold">${numSeleccionadas}</span>
         </div>
       </div>
 
-      <!-- Tabla Completa de Selección de Piezas (Misma Estética y Densidad que Catálogo) -->
-      <div class="glass-panel rounded-2xl overflow-hidden border border-slate-200/90 dark:border-slate-800/80 shadow-xl">
+      <!-- Tabla Completa de Selección de Piezas (Syntrix Glassmorphism) -->
+      <div class="bg-slate-900/65 backdrop-blur-2xl border border-slate-800/80 rounded-2xl shadow-2xl shadow-black/60 overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300">
-            <thead class="bg-slate-50 dark:bg-slate-950/80 text-xs uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider border-b border-slate-200 dark:border-slate-800">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950/60 text-xs uppercase font-semibold text-slate-400 tracking-wider border-b border-slate-800/80">
               <tr>
                 <th scope="col" class="py-3.5 px-4 text-center w-14">
                   <span class="sr-only">Selección</span>
@@ -88,12 +88,12 @@ export function renderSeleccionView() {
                 <th scope="col" class="py-3.5 px-4 text-right pr-6">Cantidad a Fabricar</th>
               </tr>
             </thead>
-            <tbody id="lista-seleccion-body" class="divide-y divide-slate-200 dark:divide-slate-800/60 bg-white/70 dark:bg-slate-900/30">
+            <tbody id="lista-seleccion-body" class="divide-y divide-slate-800/40">
               <!-- Renderizado dinámico -->
               <tr>
-                <td colspan="6" class="py-12 text-center text-slate-400">
+                <td colspan="6" class="py-12 text-center text-slate-500">
                   <div class="flex flex-col items-center justify-center space-y-2">
-                    <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-cyan-500"></i>
+                    <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-cyan-400"></i>
                     <span>Cargando catálogo para selección...</span>
                   </div>
                 </td>
@@ -105,24 +105,24 @@ export function renderSeleccionView() {
 
       <!-- Barra Flotante Inferior de Envío a Producción (Sincronizada) -->
       <div id="barra-flotante-envio" class="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-2xl px-4 z-30 transition-all duration-300 transform translate-y-24 opacity-0">
-        <div class="glass-panel p-4 rounded-2xl border border-cyan-500/30 bg-white/95 dark:bg-[#111827]/95 shadow-2xl flex items-center justify-between gap-4 backdrop-blur-2xl">
+        <div class="bg-slate-950/85 backdrop-blur-2xl border border-cyan-500/40 rounded-2xl p-4 shadow-2xl shadow-black/80 flex items-center justify-between gap-4">
           <div class="flex items-center space-x-3">
-            <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+            <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
               <i data-lucide="layers" class="w-5 h-5"></i>
             </div>
             <div>
-              <div class="text-sm font-bold text-slate-900 dark:text-white">
-                <span id="resumen-total-piezas">0</span> tipos de pieza (<span id="resumen-total-unidades" class="text-cyan-600 dark:text-cyan-400">0</span> unidades)
+              <div class="text-sm font-bold text-white">
+                <span id="resumen-total-piezas">0</span> tipos de pieza (<span id="resumen-total-unidades" class="text-cyan-400">0</span> unidades)
               </div>
-              <div class="text-xs text-slate-500 dark:text-slate-400">Listo para enviar a la línea de Control en Vivo</div>
+              <div class="text-xs text-slate-400">Listo para enviar a la línea de Control en Vivo</div>
             </div>
           </div>
 
           <button 
             id="btn-enviar-produccion" 
-            class="px-5 py-2.5 rounded-xl text-xs font-bold bg-cyan-600 hover:bg-cyan-500 text-white shadow-lg shadow-cyan-500/25 flex items-center space-x-2 transition-all transform active:scale-95 cursor-pointer"
+            class="bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-cyan-500/25 flex items-center space-x-2 transition-all transform active:scale-95 cursor-pointer text-xs"
           >
-            <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+            <i data-lucide="play" class="w-4 h-4 fill-slate-950"></i>
             <span>Enviar a Fabricar</span>
           </button>
         </div>
@@ -154,13 +154,13 @@ export async function refrescarGridSeleccion(onRefreshIcons) {
     if (filtradas.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="6" class="py-12 text-center text-slate-400">
+          <td colspan="6" class="py-12 text-center text-slate-500">
             <div class="flex flex-col items-center justify-center space-y-2.5">
-              <div class="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800/60 flex items-center justify-center text-slate-400">
+              <div class="w-10 h-10 rounded-2xl bg-slate-800/60 flex items-center justify-center text-slate-400">
                 <i data-lucide="inbox" class="w-5 h-5"></i>
               </div>
-              <p class="text-xs font-medium text-slate-700 dark:text-slate-300">No hay piezas en el catálogo</p>
-              <p class="text-[11px] text-slate-400 mt-1">Primero añade piezas en la Pantalla 1 (Catálogo) para poder seleccionarlas.</p>
+              <p class="text-xs font-medium text-slate-300">No hay piezas en el catálogo</p>
+              <p class="text-[11px] text-slate-500 mt-1">Primero añade piezas en la Pantalla 1 (Catálogo) para poder seleccionarlas.</p>
             </div>
           </td>
         </tr>
@@ -174,7 +174,7 @@ export async function refrescarGridSeleccion(onRefreshIcons) {
       const cantidadActual = estaSeleccionada ? seleccionPiezas[pieza.id].cantidad : 1;
 
       return `
-        <tr class="transition-colors group ${estaSeleccionada ? 'bg-cyan-500/10 dark:bg-cyan-950/20 hover:bg-cyan-500/15 dark:hover:bg-cyan-950/30' : 'hover:bg-slate-50 dark:hover:bg-slate-800/40'}">
+        <tr class="border-b border-slate-800/40 transition-colors group ${estaSeleccionada ? 'bg-cyan-500/10 hover:bg-cyan-500/15' : 'hover:bg-slate-800/40'}">
           
           <!-- Columna 1: Checkbox de selección individual -->
           <td class="py-3 px-4 text-center">
@@ -182,33 +182,33 @@ export async function refrescarGridSeleccion(onRefreshIcons) {
               type="button" 
               data-action="toggle-check" 
               data-id="${pieza.id}" 
-              class="w-6 h-6 rounded-lg flex items-center justify-center border transition-all cursor-pointer mx-auto ${estaSeleccionada ? 'bg-cyan-600 border-cyan-500 text-white shadow-sm shadow-cyan-500/30' : 'bg-slate-100 dark:bg-slate-950 border-slate-300 dark:border-slate-700 text-transparent hover:border-slate-400 dark:hover:border-slate-500'}"
+              class="w-6 h-6 rounded-lg flex items-center justify-center border transition-all cursor-pointer mx-auto ${estaSeleccionada ? 'bg-cyan-500 border-cyan-400 text-slate-950 shadow-md shadow-cyan-500/30' : 'bg-slate-950/80 border-slate-700 text-transparent hover:border-slate-500'}"
               title="${estaSeleccionada ? 'Deseleccionar pieza' : 'Seleccionar pieza'}"
             >
-              <i data-lucide="check" class="w-3.5 h-3.5"></i>
+              <i data-lucide="check" class="w-3.5 h-3.5 stroke-[3]"></i>
             </button>
           </td>
 
           <!-- Columna 2: Código 1 -->
-          <td class="py-3 px-4 font-mono font-bold text-slate-900 dark:text-white whitespace-nowrap">
-            <span class="px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20 text-xs font-mono">
+          <td class="py-3 px-4 font-mono font-bold text-white whitespace-nowrap">
+            <span class="px-2.5 py-0.5 rounded-md bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono">
               ${pieza.codigo1 || 'S/C'}
             </span>
           </td>
 
           <!-- Columna 3: Código 2 -->
-          <td class="py-3 px-4 font-mono text-slate-500 dark:text-slate-400 text-xs whitespace-nowrap">
-            ${pieza.codigo2 ? `<span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 font-mono">${pieza.codigo2}</span>` : '<span class="text-slate-400 dark:text-slate-600">-</span>'}
+          <td class="py-3 px-4 font-mono text-slate-400 text-xs whitespace-nowrap">
+            ${pieza.codigo2 ? `<span class="px-2.5 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60 font-mono">${pieza.codigo2}</span>` : '<span class="text-slate-600">-</span>'}
           </td>
 
           <!-- Columna 4: Descripción -->
-          <td class="py-3 px-4 font-medium text-slate-800 dark:text-slate-200">
+          <td class="py-3 px-4 font-medium text-slate-200">
             ${pieza.descripcion || '-'}
           </td>
 
-          <!-- Columna 5: Material (Cápsula) -->
+          <!-- Columna 5: Material (Cápsula Satinada) -->
           <td class="py-3 px-4 whitespace-nowrap">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+            <span class="bg-slate-800/70 border border-slate-700/50 text-cyan-300 font-mono text-xs px-3 py-1 rounded-full shadow-inner inline-flex items-center">
               ${pieza.material || 'N/A'}
             </span>
           </td>
@@ -216,12 +216,12 @@ export async function refrescarGridSeleccion(onRefreshIcons) {
           <!-- Columna 6: Cantidad a Fabricar con Controles Compactos [-] [input] [+] -->
           <td class="py-3 px-4 text-right pr-6 whitespace-nowrap">
             <div class="flex items-center justify-end space-x-1.5">
-              <div class="flex items-center space-x-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl border border-slate-200 dark:border-slate-800 shadow-inner">
+              <div class="flex items-center space-x-1 bg-slate-950/80 p-1 rounded-xl border border-slate-800 shadow-inner">
                 <button 
                   type="button" 
                   data-action="dec-qty" 
                   data-id="${pieza.id}" 
-                  class="w-6 h-6 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 flex items-center justify-center text-xs font-bold transition-colors shadow-sm cursor-pointer"
+                  class="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center text-xs font-bold transition-colors shadow-sm cursor-pointer"
                   title="Disminuir cantidad"
                 >
                   -
@@ -233,13 +233,13 @@ export async function refrescarGridSeleccion(onRefreshIcons) {
                   data-action="input-qty" 
                   data-id="${pieza.id}" 
                   value="${cantidadActual}" 
-                  class="w-12 text-center bg-transparent text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none"
+                  class="w-12 text-center bg-transparent text-xs font-mono font-bold text-white focus:outline-none"
                 />
                 <button 
                   type="button" 
                   data-action="inc-qty" 
                   data-id="${pieza.id}" 
-                  class="w-6 h-6 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 flex items-center justify-center text-xs font-bold transition-colors shadow-sm cursor-pointer"
+                  class="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center text-xs font-bold transition-colors shadow-sm cursor-pointer"
                   title="Aumentar cantidad"
                 >
                   +

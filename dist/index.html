@@ -12,90 +12,92 @@
     <meta name="apple-mobile-web-app-title" content="GeorgisWork" />
     <meta name="description" content="Sistema de Gestión de Trabajos CNC (PWA Local) con persistencia IndexedDB y exportación de reportes." />
     <title>GeorgisWork - Gestión de Trabajos CNC</title>
-    <script type="module" crossorigin src="./assets/index-NFHytcqX.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-Byzs6VrE.css">
+    <script type="module" crossorigin src="./assets/index-BXqxAINq.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BdytzZ4B.css">
   </head>
-  <body class="bg-[#f1f5f9] text-slate-900 dark:bg-[#090d16] dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-cyan-500 selection:text-white transition-colors duration-200">
+  <body class="bg-[#080d16] text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-cyan-500 selection:text-slate-950 relative overflow-x-hidden">
     
-    <!-- Top Navigation Header (Pill Dock Superior) -->
-    <header class="sticky top-0 z-40 bg-white/80 dark:bg-[#090d16]/85 backdrop-blur-xl border-b border-slate-200/90 dark:border-slate-800/80 transition-colors">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-          
-          <!-- Logo & Brand Title (Sólido y Nítido) -->
-          <div class="flex items-center space-x-3">
-            <div class="h-10 w-10 rounded-xl bg-cyan-600/20 border border-cyan-500/40 p-0.5 shadow-md shadow-cyan-500/10 flex items-center justify-center">
-              <img src="./assets/icon-CBH5Z7Ew.png" alt="GeorgisWork Logo" class="h-full w-full object-cover rounded-[10px]" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-              <div class="hidden h-full w-full bg-slate-950 rounded-[10px] items-center justify-center text-cyan-400 font-bold text-lg">GW</div>
-            </div>
-            <div>
-              <div class="flex items-center space-x-2">
-                <span class="text-lg text-slate-900 dark:text-white font-bold tracking-tight">
-                  GeorgisWork
-                </span>
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20">
-                  CNC v1.0
-                </span>
-              </div>
-              <p class="text-xs text-slate-500 dark:text-slate-400">Control de Fabricación & Horas Extras</p>
-            </div>
+    <!-- Ambient Glow Layers (Efecto de Iluminación Ambiental) -->
+    <div class="pointer-events-none fixed -top-40 -left-40 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] z-0"></div>
+    <div class="pointer-events-none fixed -bottom-40 -right-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] z-0"></div>
+
+    <!-- Top Navigation Header (Dock Flotante Syntrix) -->
+    <header class="sticky top-4 z-40 bg-slate-950/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl px-5 py-3 mx-4 mt-4 shadow-xl transition-all">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        
+        <!-- Logo & Brand Title (Sólido y Nítido) -->
+        <div class="flex items-center space-x-3">
+          <div class="h-10 w-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 p-0.5 shadow-md shadow-cyan-500/10 flex items-center justify-center">
+            <img src="./assets/icon-CBH5Z7Ew.png" alt="GeorgisWork Logo" class="h-full w-full object-cover rounded-[10px]" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="hidden h-full w-full bg-slate-950 rounded-[10px] items-center justify-center text-cyan-400 font-bold text-lg">GW</div>
           </div>
-
-          <!-- Desktop Navigation Tabs (Segmented Control Pill Dock) -->
-          <nav id="desktop-nav" class="hidden md:flex items-center p-1 rounded-xl bg-slate-200/70 dark:bg-slate-900/70 border border-slate-300/60 dark:border-slate-800/80 space-x-1 shadow-inner">
-            <button data-nav="catalogo" class="nav-tab active flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 text-cyan-700 dark:text-cyan-400 bg-white dark:bg-slate-800 shadow-sm border border-slate-300/80 dark:border-slate-700/60">
-              <i data-lucide="layers" class="w-4 h-4"></i>
-              <span>1. Catálogo</span>
-            </button>
-            <button data-nav="seleccion" class="nav-tab flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-800/50">
-              <i data-lucide="check-square" class="w-4 h-4"></i>
-              <span>2. Selección</span>
-            </button>
-            <button data-nav="control" class="nav-tab flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-800/50">
-              <i data-lucide="play-circle" class="w-4 h-4"></i>
-              <span>3. Control en Vivo</span>
-            </button>
-            <button data-nav="historial" class="nav-tab flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-800/50">
-              <i data-lucide="history" class="w-4 h-4"></i>
-              <span>4. Historial</span>
-            </button>
-            <button data-nav="horas-extras" class="nav-tab flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-800/50">
-              <i data-lucide="clock" class="w-4 h-4"></i>
-              <span>5. Horas Extras</span>
-            </button>
-          </nav>
-
-          <!-- Right Action: Config Modal Gear -->
-          <div class="flex items-center">
-            <button id="btn-open-settings" title="Configuración y Respaldos" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-slate-700 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-all border border-slate-200 dark:border-slate-800 shadow-sm active:scale-95">
-              <i data-lucide="settings" class="w-4 h-4"></i>
-              <span class="hidden sm:inline text-xs font-semibold">Configuración</span>
-            </button>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-lg text-white font-bold tracking-tight">
+                GeorgisWork
+              </span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                CNC v1.0
+              </span>
+            </div>
+            <p class="text-xs text-slate-400">Control de Fabricación & Horas Extras</p>
           </div>
-
         </div>
+
+        <!-- Desktop Navigation Tabs (Segmented Control Flotante) -->
+        <nav id="desktop-nav" class="hidden md:flex items-center bg-slate-900/80 p-1.5 rounded-xl border border-slate-800/60 gap-1 shadow-inner">
+          <button data-nav="catalogo" class="nav-tab active bg-slate-800 text-cyan-400 font-semibold shadow-md shadow-cyan-950/30 border border-cyan-500/30 rounded-lg px-3 py-1.5 text-sm flex items-center space-x-2 transition-all cursor-pointer">
+            <i data-lucide="layers" class="w-4 h-4"></i>
+            <span>1. Catálogo</span>
+          </button>
+          <button data-nav="seleccion" class="nav-tab text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg px-3 py-1.5 transition-all text-sm font-medium flex items-center space-x-2 cursor-pointer">
+            <i data-lucide="check-square" class="w-4 h-4"></i>
+            <span>2. Selección</span>
+          </button>
+          <button data-nav="control" class="nav-tab text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg px-3 py-1.5 transition-all text-sm font-medium flex items-center space-x-2 cursor-pointer">
+            <i data-lucide="play-circle" class="w-4 h-4"></i>
+            <span>3. Control en Vivo</span>
+          </button>
+          <button data-nav="historial" class="nav-tab text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg px-3 py-1.5 transition-all text-sm font-medium flex items-center space-x-2 cursor-pointer">
+            <i data-lucide="history" class="w-4 h-4"></i>
+            <span>4. Historial</span>
+          </button>
+          <button data-nav="horas-extras" class="nav-tab text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg px-3 py-1.5 transition-all text-sm font-medium flex items-center space-x-2 cursor-pointer">
+            <i data-lucide="clock" class="w-4 h-4"></i>
+            <span>5. Horas Extras</span>
+          </button>
+        </nav>
+
+        <!-- Right Action: Config Modal Gear -->
+        <div class="flex items-center">
+          <button id="btn-open-settings" title="Configuración y Respaldos" class="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-slate-300 bg-slate-900/80 hover:bg-slate-800 hover:text-white transition-all border border-slate-800/80 shadow-md active:scale-95 cursor-pointer">
+            <i data-lucide="settings" class="w-4 h-4"></i>
+            <span class="hidden sm:inline text-xs font-semibold">Configuración</span>
+          </button>
+        </div>
+
       </div>
 
-      <!-- Mobile Sub-Navigation Bar (Scrollable) -->
-      <div class="md:hidden border-t border-slate-200/90 dark:border-slate-800/80 bg-slate-100/90 dark:bg-[#090d16]/90 overflow-x-auto py-2 px-4 no-scrollbar">
-        <div id="mobile-nav" class="flex space-x-1.5 min-w-max p-1 rounded-xl bg-slate-200/70 dark:bg-slate-900/80 border border-slate-300/50 dark:border-slate-800">
-          <button data-nav="catalogo" class="nav-tab-mobile active px-3 py-1.5 rounded-lg text-xs font-semibold text-cyan-700 dark:text-cyan-400 bg-white dark:bg-slate-800 shadow-sm border border-slate-300/80 dark:border-slate-700/60 flex items-center space-x-1.5">
+      <!-- Mobile Sub-Navigation Bar -->
+      <div class="md:hidden mt-3 pt-2.5 border-t border-slate-800/60 overflow-x-auto no-scrollbar">
+        <div id="mobile-nav" class="flex space-x-1.5 min-w-max p-1 rounded-xl bg-slate-900/80 border border-slate-800/60">
+          <button data-nav="catalogo" class="nav-tab-mobile active px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-cyan-400 shadow-md border border-cyan-500/30 flex items-center space-x-1.5">
             <i data-lucide="layers" class="w-3.5 h-3.5"></i>
             <span>1. Catálogo</span>
           </button>
-          <button data-nav="seleccion" class="nav-tab-mobile px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center space-x-1.5">
+          <button data-nav="seleccion" class="nav-tab-mobile px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 flex items-center space-x-1.5">
             <i data-lucide="check-square" class="w-3.5 h-3.5"></i>
             <span>2. Selección</span>
           </button>
-          <button data-nav="control" class="nav-tab-mobile px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center space-x-1.5">
+          <button data-nav="control" class="nav-tab-mobile px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 flex items-center space-x-1.5">
             <i data-lucide="play-circle" class="w-3.5 h-3.5"></i>
             <span>3. Control</span>
           </button>
-          <button data-nav="historial" class="nav-tab-mobile px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center space-x-1.5">
+          <button data-nav="historial" class="nav-tab-mobile px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 flex items-center space-x-1.5">
             <i data-lucide="history" class="w-3.5 h-3.5"></i>
             <span>4. Historial</span>
           </button>
-          <button data-nav="horas-extras" class="nav-tab-mobile px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center space-x-1.5">
+          <button data-nav="horas-extras" class="nav-tab-mobile px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 flex items-center space-x-1.5">
             <i data-lucide="clock" class="w-3.5 h-3.5"></i>
             <span>5. H. Extras</span>
           </button>
@@ -103,8 +105,8 @@
       </div>
     </header>
 
-    <!-- Main Content Container (100% Limpio sin banners intrusivos) -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 relative z-10">
       
       <!-- Dynamic Views Container -->
       <div id="view-container" class="min-h-[450px]">
@@ -114,10 +116,10 @@
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-slate-200/90 dark:border-slate-800/80 py-4 px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500 dark:text-slate-500 bg-white/50 dark:bg-[#090d16]/50 transition-colors">
+    <footer class="border-t border-slate-800/80 py-4 px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500 bg-slate-950/40 relative z-10 transition-colors">
       <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
         <p>GeorgisWork CNC &copy; 2026 - PWA Offline Local</p>
-        <p class="text-slate-400 dark:text-slate-600 font-mono">Control de Fabricación & Horas Extras</p>
+        <p class="text-slate-600 font-mono">Control de Fabricación & Horas Extras</p>
       </div>
     </footer>
 

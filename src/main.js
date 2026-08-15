@@ -227,18 +227,18 @@ export async function navigateTo(viewKey) {
   // Actualizar botones de navegación desktop
   document.querySelectorAll('#desktop-nav .nav-tab').forEach(btn => {
     if (btn.getAttribute('data-nav') === viewKey) {
-      btn.className = 'nav-tab active flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 text-cyan-700 dark:text-cyan-400 bg-white dark:bg-slate-800 shadow-sm border border-slate-300/80 dark:border-slate-700/60';
+      btn.className = 'nav-tab active bg-slate-800 text-cyan-400 font-semibold shadow-md shadow-cyan-950/30 border border-cyan-500/30 rounded-lg px-3 py-1.5 text-sm flex items-center space-x-2 transition-all cursor-pointer';
     } else {
-      btn.className = 'nav-tab flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-800/50';
+      btn.className = 'nav-tab text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg px-3 py-1.5 transition-all text-sm font-medium flex items-center space-x-2 cursor-pointer';
     }
   });
 
   // Actualizar botones de navegación móvil
   document.querySelectorAll('#mobile-nav .nav-tab-mobile').forEach(btn => {
     if (btn.getAttribute('data-nav') === viewKey) {
-      btn.className = 'nav-tab-mobile active px-3 py-1.5 rounded-lg text-xs font-semibold text-cyan-700 dark:text-cyan-400 bg-white dark:bg-slate-800 shadow-sm border border-slate-300/80 dark:border-slate-700/60 flex items-center space-x-1.5';
+      btn.className = 'nav-tab-mobile active px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-cyan-400 shadow-md border border-cyan-500/30 flex items-center space-x-1.5';
     } else {
-      btn.className = 'nav-tab-mobile px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center space-x-1.5';
+      btn.className = 'nav-tab-mobile px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 flex items-center space-x-1.5';
     }
   });
 
