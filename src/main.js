@@ -36,7 +36,9 @@ import {
   Gauge,
   List,
   FileText,
-  Calculator
+  Calculator,
+  UploadCloud,
+  Lock
 } from 'lucide';
 import { 
   db, 

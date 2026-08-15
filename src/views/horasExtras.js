@@ -115,12 +115,12 @@ export function renderHorasExtrasView() {
           <table class="w-full text-left text-sm text-slate-300">
             <thead class="bg-slate-950/80 text-xs uppercase font-semibold text-slate-400 tracking-wider border-b border-slate-800">
               <tr>
-                <th scope="col" class="py-3.5 px-4 font-mono">Fecha (DD/MM)</th>
+                <th scope="col" class="py-3.5 px-4 font-mono">Fecha</th>
+                <th scope="col" class="py-3.5 px-4 font-mono text-amber-400">Hora Inicio HE</th>
+                <th scope="col" class="py-3.5 px-4 font-mono text-amber-400">Hora Fin HE</th>
                 <th scope="col" class="py-3.5 px-4 font-mono">Código</th>
                 <th scope="col" class="py-3.5 px-4">Descripción de la Pieza</th>
                 <th scope="col" class="py-3.5 px-4 text-center">Cant.</th>
-                <th scope="col" class="py-3.5 px-4 text-center font-mono">H. Reales</th>
-                <th scope="col" class="py-3.5 px-4 text-center font-mono">H. Exactas</th>
                 <th scope="col" class="py-3.5 px-4 text-right font-mono text-rose-400">Horas Extras a Liquidar</th>
               </tr>
             </thead>
@@ -201,8 +201,14 @@ export async function refrescarHorasExtras(onRefreshIcons) {
           <tr class="hover:bg-slate-800/40 transition-colors">
             <td class="py-3 px-4 font-mono font-bold text-white whitespace-nowrap">
               <span class="px-2 py-0.5 rounded-md bg-slate-800 text-slate-200 border border-slate-700">
-                ${r.fechaDDMM}
+                ${r.fechaCompleta}
               </span>
+            </td>
+            <td class="py-3 px-4 font-mono text-amber-400 text-xs whitespace-nowrap">
+              ${r.horaInicioHE}
+            </td>
+            <td class="py-3 px-4 font-mono text-amber-400 text-xs whitespace-nowrap">
+              ${r.horaFinHE}
             </td>
             <td class="py-3 px-4 font-mono text-cyan-400 whitespace-nowrap">
               ${r.codigo1 || '-'}
@@ -213,12 +219,6 @@ export async function refrescarHorasExtras(onRefreshIcons) {
             </td>
             <td class="py-3 px-4 text-center font-mono text-slate-300 whitespace-nowrap">
               ${r.cantidad} u.
-            </td>
-            <td class="py-3 px-4 text-center font-mono text-xs text-slate-400 whitespace-nowrap">
-              ${r.horasTotalesReales} h
-            </td>
-            <td class="py-3 px-4 text-center font-mono text-xs text-slate-400 whitespace-nowrap">
-              ${r.horasExtrasExactas} h
             </td>
             <td class="py-3 px-4 text-right font-mono font-bold text-rose-400 whitespace-nowrap">
               <span class="px-3 py-1 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20 shadow-sm">
@@ -271,13 +271,12 @@ export function exportarReporteExcel(registros, onToast) {
     const dataFilas = registros.map((r, idx) => ({
       'N°': idx + 1,
       'Fecha': r.fechaCompleta,
+      'Hora Inicio HE': r.horaInicioHE,
+      'Hora Fin HE': r.horaFinHE,
       'Código Parte': r.codigo1,
       'Código Plano (DWG)': r.codigo2,
       'Descripción de la Pieza': r.descripcion,
-      'Material': r.material,
       'Cantidad Fabricada': r.cantidad,
-      'Tiempo Real Total (h)': r.horasTotalesReales,
-      'Horas Extras Exactas': r.horasExtrasExactas,
       'Horas Extras a Liquidar (h)': r.horasExtrasRedondeadas
     }));
 
@@ -288,14 +287,13 @@ export function exportarReporteExcel(registros, onToast) {
     // Ajustar anchos de columna
     worksheet['!cols'] = [
       { wch: 5 },  // N°
-      { wch: 12 }, // Fecha
+      { wch: 14 }, // Fecha
+      { wch: 14 }, // Hora Inicio HE
+      { wch: 12 }, // Hora Fin HE
       { wch: 16 }, // Código Parte
       { wch: 16 }, // Código Plano
       { wch: 35 }, // Descripción
-      { wch: 18 }, // Material
       { wch: 18 }, // Cantidad
-      { wch: 20 }, // Tiempo Real
-      { wch: 20 }, // H. Extras Exactas
       { wch: 24 }  // H. Extras Liquidar
     ];
 

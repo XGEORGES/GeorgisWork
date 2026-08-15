@@ -125,7 +125,7 @@ export function procesarHorasExtrasTrabajo(intervalos, trabajo) {
   if (!intervalos || intervalos.length < 2) return [];
 
   const ordenados = [...intervalos].sort((a, b) => a.timestamp - b.timestamp);
-  const segmentosPorFecha = {}; // { 'YYYY-MM-DD': { minutosExtras: 0, minutosOrdinarios: 0, primerTimestamp: number } }
+  const segmentosPorFecha = {}; // { 'YYYY-MM-DD': { minutosExtras, minutosOrdinarios, primerTimestamp, primerTimestampHE, ultimoTimestampHE } }
 
   let inicioActual = null;
 
@@ -156,12 +156,36 @@ export function procesarHorasExtrasTrabajo(intervalos, trabajo) {
             fecha: fechaKey,
             minutosExtras: 0,
             minutosOrdinarios: 0,
-            primerTimestamp: cursor
+            primerTimestamp: cursor,
+            primerTimestampHE: null,
+            ultimoTimestampHE: null
           };
         }
 
         segmentosPorFecha[fechaKey].minutosExtras += minutosExtras;
         segmentosPorFecha[fechaKey].minutosOrdinarios += minutosOrdinarios;
+
+        // Calcular la primera y última hora extra del día
+        // Iteramos minuto a minuto para identificar cuándo comienza y termina el sobretiempo
+        if (minutosExtras > 0) {
+          let cur2 = cursor;
+          while (cur2 < subFin) {
+            const d2 = new Date(cur2);
+            const diaSemana = d2.getDay();
+            const minutoDelDia = d2.getHours() * 60 + d2.getMinutes();
+            const esExtra = esDomingoOFeriado(d2) ||
+              (diaSemana >= 1 && diaSemana <= 5 && (minutoDelDia < 480 || minutoDelDia >= 1050)) ||
+              (diaSemana === 6 && (minutoDelDia < 480 || minutoDelDia >= 810));
+
+            if (esExtra) {
+              if (segmentosPorFecha[fechaKey].primerTimestampHE === null) {
+                segmentosPorFecha[fechaKey].primerTimestampHE = cur2;
+              }
+              segmentosPorFecha[fechaKey].ultimoTimestampHE = cur2 + 60000; // fin del minuto
+            }
+            cur2 += 60000;
+          }
+        }
 
         cursor = subFin;
       }
@@ -186,6 +210,13 @@ export function procesarHorasExtrasTrabajo(intervalos, trabajo) {
       const fechaDDMM = `${dia}/${mes}`;
       const fechaCompleta = `${dia}/${mes}/${d.getFullYear()}`;
 
+      // Formatear hora inicio y fin HE (HH:mm)
+      const fmtHora = (ts) => {
+        if (!ts) return '-';
+        const dt = new Date(ts);
+        return `${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
+      };
+
       resultados.push({
         trabajoId: trabajo.id,
         fechaKey,
@@ -201,6 +232,8 @@ export function procesarHorasExtrasTrabajo(intervalos, trabajo) {
         horasTotalesReales: parseFloat(horasTotalesReales.toFixed(2)),
         horasExtrasExactas: parseFloat(horasExtrasExactas.toFixed(2)),
         horasExtrasRedondeadas: parseFloat(horasExtrasRedondeadas.toFixed(1)),
+        horaInicioHE: fmtHora(datos.primerTimestampHE),
+        horaFinHE: fmtHora(datos.ultimoTimestampHE),
         formateado: `${horasExtrasRedondeadas.toFixed(1)} h`
       });
     }

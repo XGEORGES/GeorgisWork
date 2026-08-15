@@ -7,18 +7,20 @@ let piezaEnEdicionId = null;
 
 // Lista de materiales estándar comunes en mecanizado CNC
 export const MATERIALES_CNC = [
-  'Aluminio 6061-T6',
-  'Aluminio 7075-T6',
+  'Aluminio 6061',
+  'Aluminio 7075',
   'Acero 1018',
+  'Acero 1020',
   'Acero 1045',
-  'Acero Inox 304',
-  'Acero Inox 316L',
-  'Acero para Herramientas D2',
+  'Acero A36',
+  'VCL',
+  'VCN',
   'Bronce SAE 64',
-  'Latón',
-  'Delrin / Acetal',
-  'Nylon 6',
-  'Teflón (PTFE)',
+  'Nylon',
+  'Teflón',
+  'Policarbonato',
+  'Inox 306',
+  'Inox 316',
   'Otro'
 ];
 

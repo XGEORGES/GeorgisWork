@@ -81,6 +81,9 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
       })
     );
 
+    // Verificar si hay algún trabajo actualmente fabricando (concurrencia de máquina)
+    const hayMaquinaOcupada = trabajosConInfo.some(t => t.estado === 'fabricando');
+
     container.innerHTML = trabajosConInfo.map(t => {
       const isFabricando = t.estado === 'fabricando';
       const isPausado = t.estado === 'pausado';
@@ -92,7 +95,7 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
         badgeHtml = `
           <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-sm shadow-emerald-500/10">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-1.5"></span>
-            Fabricando
+            En Proceso
           </span>
         `;
       } else if (isPausado) {
@@ -111,12 +114,55 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
         `;
       }
 
-      // Habilitación de botones
-      // Restricción APP_SPEC.md: El botón Terminar solo se habilita después de haber hecho clic al menos una vez en Empezar.
+      // Restricción concurrencia: si la máquina está ocupada y este trabajo NO es el que fabrica,
+      // se bloquea el botón Empezar/Reanudar.
+      const maquinaOcupadaPorOtro = hayMaquinaOcupada && !isFabricando;
       const puedeTerminar = t.tieneIntervalos;
 
+      // HTML del botón Empezar o Pausar
+      let btnAccionHtml = '';
+      if (!isFabricando) {
+        if (maquinaOcupadaPorOtro) {
+          btnAccionHtml = `
+            <button 
+              type="button" 
+              disabled
+              title="Máquina ocupada: pausa el trabajo actual para iniciar otro"
+              class="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-600 border border-slate-700/50 flex items-center space-x-1.5 cursor-not-allowed opacity-50 select-none"
+            >
+              <i data-lucide="lock" class="w-4 h-4"></i>
+              <span>${isPausado ? 'Reanudar' : 'Empezar'}</span>
+            </button>
+          `;
+        } else {
+          btnAccionHtml = `
+            <button 
+              type="button" 
+              data-action="empezar" 
+              data-id="${t.id}" 
+              class="px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-500/25 flex items-center space-x-1.5 transition-all transform active:scale-95"
+            >
+              <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+              <span>${isPausado ? 'Reanudar' : 'Empezar'}</span>
+            </button>
+          `;
+        }
+      } else {
+        btnAccionHtml = `
+          <button 
+            type="button" 
+            data-action="pausar" 
+            data-id="${t.id}" 
+            class="px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white shadow-lg shadow-amber-500/25 flex items-center space-x-1.5 transition-all transform active:scale-95"
+          >
+            <i data-lucide="pause" class="w-4 h-4 fill-white"></i>
+            <span>Pausar</span>
+          </button>
+        `;
+      }
+
       return `
-        <div class="glass-card rounded-2xl p-5 sm:p-6 border transition-all duration-300 ${isFabricando ? 'border-emerald-500/50 bg-slate-900/90 shadow-xl shadow-emerald-500/5 ring-1 ring-emerald-500/20' : 'border-slate-800 bg-slate-900/70'}">
+        <div class="glass-card rounded-2xl p-5 sm:p-6 border transition-all duration-300 ${isFabricando ? 'border-emerald-500/50 bg-slate-900/90 shadow-xl shadow-emerald-500/5 ring-1 ring-emerald-500/20' : maquinaOcupadaPorOtro ? 'border-slate-800/50 bg-slate-900/40 opacity-70' : 'border-slate-800 bg-slate-900/70'}">
           
           <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
             
@@ -131,6 +177,7 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
                   ${t.material || 'Material'}
                 </span>
                 ${badgeHtml}
+                ${maquinaOcupadaPorOtro ? `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800/60 text-slate-500 border border-slate-700/40"><i data-lucide="lock" class="w-3 h-3 mr-1"></i>Bloqueado</span>` : ''}
               </div>
 
               <div>
@@ -157,29 +204,7 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
             <!-- Columna Derecha: Botones de Acción Empezar / Pausar / Terminar -->
             <div class="flex items-center justify-end gap-2.5 flex-wrap">
               
-              <!-- Botón Empezar / Reanudar -->
-              ${!isFabricando ? `
-                <button 
-                  type="button" 
-                  data-action="empezar" 
-                  data-id="${t.id}" 
-                  class="px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-500/25 flex items-center space-x-1.5 transition-all transform active:scale-95"
-                >
-                  <i data-lucide="play" class="w-4 h-4 fill-white"></i>
-                  <span>${isPausado ? 'Reanudar' : 'Empezar'}</span>
-                </button>
-              ` : `
-                <!-- Botón Pausar -->
-                <button 
-                  type="button" 
-                  data-action="pausar" 
-                  data-id="${t.id}" 
-                  class="px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white shadow-lg shadow-amber-500/25 flex items-center space-x-1.5 transition-all transform active:scale-95"
-                >
-                  <i data-lucide="pause" class="w-4 h-4 fill-white"></i>
-                  <span>Pausar</span>
-                </button>
-              `}
+              ${btnAccionHtml}
 
               <!-- Botón Terminar (Con restricción) -->
               <button 

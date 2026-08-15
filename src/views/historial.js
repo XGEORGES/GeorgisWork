@@ -157,6 +157,7 @@ export function renderHistorialView() {
                 <th scope="col" class="py-3.5 px-4">Material</th>
                 <th scope="col" class="py-3.5 px-4 text-center">Cantidad</th>
                 <th scope="col" class="py-3.5 px-4 font-mono text-emerald-400">Tiempo Total Fabricado</th>
+                <th scope="col" class="py-3.5 px-4 text-xs">Fecha Inicio</th>
                 <th scope="col" class="py-3.5 px-4 text-xs">Fecha Término</th>
                 <th scope="col" class="py-3.5 px-4 text-right">Acciones</th>
               </tr>
@@ -164,7 +165,7 @@ export function renderHistorialView() {
             <tbody id="lista-historial-body" class="divide-y divide-slate-800/60 bg-slate-900/30">
               <!-- Renderizado dinámico -->
               <tr>
-                <td colspan="8" class="py-12 text-center text-slate-500">
+                <td colspan="9" class="py-12 text-center text-slate-500">
                   <div class="flex flex-col items-center justify-center space-y-2">
                     <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-emerald-500"></i>
                     <span>Cargando historial de trabajos...</span>
@@ -266,6 +267,14 @@ export async function refrescarHistorial(onRefreshIcons) {
           ? new Date(t.fechaFin).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
           : (t.fechaCreacion ? new Date(t.fechaCreacion).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-');
 
+        // Calcular fecha de inicio: primer evento 'empezar' entre los intervalos
+        const primerEmpezar = t.intervalos
+          .filter(i => i.tipo === 'empezar')
+          .sort((a, b) => a.timestamp - b.timestamp)[0];
+        const fechaInicio = primerEmpezar
+          ? new Date(primerEmpezar.timestamp).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+          : '-';
+
         return `
           <tr class="hover:bg-slate-800/40 transition-colors">
             <td class="py-3 px-4 font-mono font-bold text-white whitespace-nowrap">
@@ -291,6 +300,9 @@ export async function refrescarHistorial(onRefreshIcons) {
               <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
                 ${t.tiempoInfo.formateado}
               </span>
+            </td>
+            <td class="py-3 px-4 text-xs text-slate-400 font-mono whitespace-nowrap">
+              ${fechaInicio}
             </td>
             <td class="py-3 px-4 text-xs text-slate-400 font-mono whitespace-nowrap">
               ${fechaTermino}

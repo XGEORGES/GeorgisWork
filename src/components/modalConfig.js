@@ -61,7 +61,7 @@ export function renderModalConfig() {
                 id="btn-export-backup" 
                 class="py-2.5 px-4 rounded-xl text-xs font-bold bg-blue-600/15 hover:bg-blue-600/25 text-blue-400 border border-blue-500/30 flex items-center justify-center space-x-2 transition-all shadow-sm cursor-pointer"
               >
-                <i data-lucide="download" class="w-4 h-4"></i>
+                <i data-lucide="upload-cloud" class="w-4 h-4"></i>
                 <span>Exportar Backup (.JSON)</span>
               </button>
 
@@ -69,7 +69,7 @@ export function renderModalConfig() {
               <label 
                 class="py-2.5 px-4 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center justify-center space-x-2 cursor-pointer transition-all shadow-sm"
               >
-                <i data-lucide="upload" class="w-4 h-4 text-emerald-400"></i>
+                <i data-lucide="download" class="w-4 h-4 text-emerald-400"></i>
                 <span>Importar Backup (.JSON)</span>
                 <input id="input-import-backup" type="file" accept=".json,application/json" class="hidden" />
               </label>
