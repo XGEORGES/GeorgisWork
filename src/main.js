@@ -227,18 +227,18 @@ export async function navigateTo(viewKey) {
   // Actualizar botones de navegación desktop
   document.querySelectorAll('#desktop-nav .nav-tab').forEach(btn => {
     if (btn.getAttribute('data-nav') === viewKey) {
-      btn.className = 'nav-tab active flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 text-zinc-900 dark:text-white bg-white dark:bg-zinc-800 shadow-sm border border-zinc-200/80 dark:border-zinc-700/60';
+      btn.className = 'nav-tab active flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 text-cyan-700 dark:text-cyan-400 bg-white dark:bg-slate-800 shadow-sm border border-slate-300/80 dark:border-slate-700/60';
     } else {
-      btn.className = 'nav-tab flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-200/60 dark:hover:bg-zinc-800/50';
+      btn.className = 'nav-tab flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-800/50';
     }
   });
 
   // Actualizar botones de navegación móvil
   document.querySelectorAll('#mobile-nav .nav-tab-mobile').forEach(btn => {
     if (btn.getAttribute('data-nav') === viewKey) {
-      btn.className = 'nav-tab-mobile active px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-900 dark:text-white bg-white dark:bg-zinc-800 shadow-sm border border-zinc-200/80 dark:border-zinc-700/60 flex items-center space-x-1.5';
+      btn.className = 'nav-tab-mobile active px-3 py-1.5 rounded-lg text-xs font-semibold text-cyan-700 dark:text-cyan-400 bg-white dark:bg-slate-800 shadow-sm border border-slate-300/80 dark:border-slate-700/60 flex items-center space-x-1.5';
     } else {
-      btn.className = 'nav-tab-mobile px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 flex items-center space-x-1.5';
+      btn.className = 'nav-tab-mobile px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center space-x-1.5';
     }
   });
 
