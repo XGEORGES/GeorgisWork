@@ -6,9 +6,11 @@ let piezasDisponibles = [];
 let filtroBusqueda = '';
 
 /**
- * Renderiza la interfaz de la Pantalla 2 (Selección de Piezas - Estilo Syntrix)
+ * Renderiza la interfaz de la Pantalla 2 (Selección de Piezas - Vista Tabla Estilo Syntrix)
  */
 export function renderSeleccionView() {
+  const numSeleccionadas = Object.keys(seleccionPiezas).length;
+
   return `
     <div class="space-y-6 pb-24">
       
@@ -19,17 +21,32 @@ export function renderSeleccionView() {
             <i data-lucide="check-square" class="w-7 h-7 text-cyan-600 dark:text-cyan-400"></i>
             <span>Selección de Piezas para Fabricar</span>
           </h1>
-          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Elige las piezas y cantidades a enviar a la línea de mecanizado CNC.</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Elige las piezas y define las cantidades a enviar a la línea de mecanizado CNC.</p>
         </div>
 
-        <div class="flex items-center gap-3">
-          <button id="btn-limpiar-seleccion" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/60 transition-colors active:scale-95 cursor-pointer">
+        <div class="flex items-center gap-2.5">
+          <button 
+            id="btn-limpiar-seleccion" 
+            class="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/60 transition-colors active:scale-95 cursor-pointer"
+          >
             Limpiar Selección
+          </button>
+
+          <!-- Botón Principal Destacado en Barra Superior -->
+          <button 
+            id="btn-enviar-top" 
+            class="px-4 py-2 rounded-xl text-xs font-bold bg-cyan-600 hover:bg-cyan-500 text-white shadow-md shadow-cyan-500/25 flex items-center space-x-2 transition-all transform active:scale-95 cursor-pointer"
+          >
+            <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+            <span>Enviar Seleccionadas a Control en Vivo</span>
+            <span id="badge-contador-top" class="px-2 py-0.5 rounded-full bg-cyan-800/60 text-cyan-200 font-mono text-[11px] font-bold border border-cyan-400/30">
+              ${numSeleccionadas}
+            </span>
           </button>
         </div>
       </div>
 
-      <!-- Barra de Búsqueda Rápida -->
+      <!-- Barra de Filtros y Búsqueda Reactiva -->
       <div class="glass-panel p-3.5 rounded-2xl border border-slate-200/90 dark:border-slate-800/80 shadow-md flex items-center justify-between gap-4 transition-colors">
         <div class="relative flex-1">
           <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
@@ -40,24 +57,53 @@ export function renderSeleccionView() {
             id="filtro-seleccion" 
             placeholder="Buscar por código, descripción o material..." 
             value="${filtroBusqueda}"
-            class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-colors"
+            class="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-colors"
           />
+          ${filtroBusqueda ? `
+            <button id="btn-clear-search-sel" class="absolute inset-y-0 right-0 flex items-center pr-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+              <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            </button>
+          ` : ''}
         </div>
-        <div class="text-xs text-slate-500 dark:text-slate-400 font-mono hidden sm:block">
-          Seleccionadas: <span id="contador-seleccionadas" class="text-cyan-600 dark:text-cyan-400 font-bold">0</span> piezas
-        </div>
-      </div>
-
-      <!-- Grid de Tarjetas de Piezas del Catálogo -->
-      <div id="grid-piezas-seleccion" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Renderizado dinámico -->
-        <div class="col-span-full py-12 text-center text-slate-400">
-          <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-cyan-500 mx-auto mb-2"></i>
-          <span>Cargando piezas disponibles...</span>
+        
+        <div class="flex items-center justify-end px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 font-mono">
+          Marcadas: <span id="contador-seleccionadas" class="ml-1 text-cyan-600 dark:text-cyan-400 font-bold">${numSeleccionadas}</span>
         </div>
       </div>
 
-      <!-- Barra Flotante Inferior de Envío a Producción -->
+      <!-- Tabla Completa de Selección de Piezas (Misma Estética y Densidad que Catálogo) -->
+      <div class="glass-panel rounded-2xl overflow-hidden border border-slate-200/90 dark:border-slate-800/80 shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300">
+            <thead class="bg-slate-50 dark:bg-slate-950/80 text-xs uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider border-b border-slate-200 dark:border-slate-800">
+              <tr>
+                <th scope="col" class="py-3.5 px-4 text-center w-14">
+                  <span class="sr-only">Selección</span>
+                  <i data-lucide="check-square" class="w-4 h-4 mx-auto text-slate-400"></i>
+                </th>
+                <th scope="col" class="py-3.5 px-4 font-mono">Código 1</th>
+                <th scope="col" class="py-3.5 px-4 font-mono">Código 2</th>
+                <th scope="col" class="py-3.5 px-4">Descripción</th>
+                <th scope="col" class="py-3.5 px-4">Material</th>
+                <th scope="col" class="py-3.5 px-4 text-right pr-6">Cantidad a Fabricar</th>
+              </tr>
+            </thead>
+            <tbody id="lista-seleccion-body" class="divide-y divide-slate-200 dark:divide-slate-800/60 bg-white/70 dark:bg-slate-900/30">
+              <!-- Renderizado dinámico -->
+              <tr>
+                <td colspan="6" class="py-12 text-center text-slate-400">
+                  <div class="flex flex-col items-center justify-center space-y-2">
+                    <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-cyan-500"></i>
+                    <span>Cargando catálogo para selección...</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Barra Flotante Inferior de Envío a Producción (Sincronizada) -->
       <div id="barra-flotante-envio" class="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-2xl px-4 z-30 transition-all duration-300 transform translate-y-24 opacity-0">
         <div class="glass-panel p-4 rounded-2xl border border-cyan-500/30 bg-white/95 dark:bg-[#111827]/95 shadow-2xl flex items-center justify-between gap-4 backdrop-blur-2xl">
           <div class="flex items-center space-x-3">
@@ -87,7 +133,7 @@ export function renderSeleccionView() {
 }
 
 /**
- * Renderiza las tarjetas de piezas disponibles con controles de cantidad
+ * Renderiza los renglones de la tabla de selección con checkboxes y controles compactos de cantidad
  */
 export async function refrescarGridSeleccion(onRefreshIcons) {
   try {
@@ -102,108 +148,124 @@ export async function refrescarGridSeleccion(onRefreshIcons) {
              (p.material && p.material.toLowerCase().includes(query));
     });
 
-    const grid = document.getElementById('grid-piezas-seleccion');
-    if (!grid) return;
+    const tbody = document.getElementById('lista-seleccion-body');
+    if (!tbody) return;
 
     if (filtradas.length === 0) {
-      grid.innerHTML = `
-        <div class="col-span-full py-12 text-center text-slate-400 glass-card rounded-2xl p-8 bg-white/90 dark:bg-[#111827]/75 border border-slate-200 dark:border-slate-800">
-          <div class="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800/60 flex items-center justify-center text-slate-400 mx-auto mb-3">
-            <i data-lucide="inbox" class="w-5 h-5"></i>
-          </div>
-          <p class="text-xs font-medium text-slate-700 dark:text-slate-300">No hay piezas en el catálogo</p>
-          <p class="text-[11px] text-slate-400 mt-1">Primero añade piezas en la Pantalla 1 (Catálogo) para poder seleccionarlas.</p>
-        </div>
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="py-12 text-center text-slate-400">
+            <div class="flex flex-col items-center justify-center space-y-2.5">
+              <div class="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800/60 flex items-center justify-center text-slate-400">
+                <i data-lucide="inbox" class="w-5 h-5"></i>
+              </div>
+              <p class="text-xs font-medium text-slate-700 dark:text-slate-300">No hay piezas en el catálogo</p>
+              <p class="text-[11px] text-slate-400 mt-1">Primero añade piezas en la Pantalla 1 (Catálogo) para poder seleccionarlas.</p>
+            </div>
+          </td>
+        </tr>
       `;
       actualizarBarraFlotante();
       return;
     }
 
-    grid.innerHTML = filtradas.map(pieza => {
+    tbody.innerHTML = filtradas.map(pieza => {
       const estaSeleccionada = !!seleccionPiezas[pieza.id];
       const cantidadActual = estaSeleccionada ? seleccionPiezas[pieza.id].cantidad : 1;
 
       return `
-        <div class="rounded-2xl p-5 border transition-all duration-200 shadow-md ${estaSeleccionada ? 'border-cyan-500/80 bg-cyan-50/40 dark:bg-[#111827] ring-1 ring-cyan-500/30 shadow-cyan-500/5' : 'border-slate-200/90 dark:border-slate-800/80 bg-white/90 dark:bg-[#111827]/75 hover:border-slate-300 dark:hover:border-slate-700'}">
+        <tr class="transition-colors group ${estaSeleccionada ? 'bg-cyan-500/10 dark:bg-cyan-950/20 hover:bg-cyan-500/15 dark:hover:bg-cyan-950/30' : 'hover:bg-slate-50 dark:hover:bg-slate-800/40'}">
           
-          <div class="flex items-start justify-between gap-2 mb-3">
-            <div>
-              <div class="flex items-center space-x-2">
-                <span class="font-mono text-xs font-bold text-cyan-700 dark:text-cyan-400 px-2 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-500/20">
-                  ${pieza.codigo1 || 'S/C'}
-                </span>
-                ${pieza.codigo2 ? `<span class="font-mono text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 font-mono">${pieza.codigo2}</span>` : ''}
-              </div>
-              <h3 class="text-xs font-semibold text-slate-900 dark:text-slate-100 mt-2 line-clamp-1">${pieza.descripcion}</h3>
-            </div>
-            
-            <!-- Checkbox de selección rápida -->
+          <!-- Columna 1: Checkbox de selección individual -->
+          <td class="py-3 px-4 text-center">
             <button 
               type="button" 
               data-action="toggle-check" 
               data-id="${pieza.id}" 
-              class="w-6 h-6 rounded-lg flex items-center justify-center border transition-all cursor-pointer ${estaSeleccionada ? 'bg-cyan-600 border-cyan-500 text-white' : 'bg-slate-100 dark:bg-slate-950 border-slate-300 dark:border-slate-700 text-transparent hover:border-slate-400 dark:hover:border-slate-500'}"
+              class="w-6 h-6 rounded-lg flex items-center justify-center border transition-all cursor-pointer mx-auto ${estaSeleccionada ? 'bg-cyan-600 border-cyan-500 text-white shadow-sm shadow-cyan-500/30' : 'bg-slate-100 dark:bg-slate-950 border-slate-300 dark:border-slate-700 text-transparent hover:border-slate-400 dark:hover:border-slate-500'}"
+              title="${estaSeleccionada ? 'Deseleccionar pieza' : 'Seleccionar pieza'}"
             >
               <i data-lucide="check" class="w-3.5 h-3.5"></i>
             </button>
-          </div>
+          </td>
 
-          <div class="mb-4">
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-              ${pieza.material}
+          <!-- Columna 2: Código 1 -->
+          <td class="py-3 px-4 font-mono font-bold text-slate-900 dark:text-white whitespace-nowrap">
+            <span class="px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20 text-xs font-mono">
+              ${pieza.codigo1 || 'S/C'}
             </span>
-          </div>
+          </td>
 
-          <!-- Control de Cantidad -->
-          <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Cantidad a fabricar:</span>
-            
-            <div class="flex items-center space-x-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl border border-slate-200 dark:border-slate-800">
-              <button 
-                type="button" 
-                data-action="dec-qty" 
-                data-id="${pieza.id}" 
-                class="w-6 h-6 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 flex items-center justify-center text-xs font-bold transition-colors shadow-sm cursor-pointer"
-              >
-                -
-              </button>
-              <input 
-                type="number" 
-                min="1" 
-                max="9999" 
-                data-action="input-qty" 
-                data-id="${pieza.id}" 
-                value="${cantidadActual}" 
-                class="w-10 text-center bg-transparent text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none"
-              />
-              <button 
-                type="button" 
-                data-action="inc-qty" 
-                data-id="${pieza.id}" 
-                class="w-6 h-6 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 flex items-center justify-center text-xs font-bold transition-colors shadow-sm cursor-pointer"
-              >
-                +
-              </button>
+          <!-- Columna 3: Código 2 -->
+          <td class="py-3 px-4 font-mono text-slate-500 dark:text-slate-400 text-xs whitespace-nowrap">
+            ${pieza.codigo2 ? `<span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 font-mono">${pieza.codigo2}</span>` : '<span class="text-slate-400 dark:text-slate-600">-</span>'}
+          </td>
+
+          <!-- Columna 4: Descripción -->
+          <td class="py-3 px-4 font-medium text-slate-800 dark:text-slate-200">
+            ${pieza.descripcion || '-'}
+          </td>
+
+          <!-- Columna 5: Material (Cápsula) -->
+          <td class="py-3 px-4 whitespace-nowrap">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+              ${pieza.material || 'N/A'}
+            </span>
+          </td>
+
+          <!-- Columna 6: Cantidad a Fabricar con Controles Compactos [-] [input] [+] -->
+          <td class="py-3 px-4 text-right pr-6 whitespace-nowrap">
+            <div class="flex items-center justify-end space-x-1.5">
+              <div class="flex items-center space-x-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl border border-slate-200 dark:border-slate-800 shadow-inner">
+                <button 
+                  type="button" 
+                  data-action="dec-qty" 
+                  data-id="${pieza.id}" 
+                  class="w-6 h-6 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 flex items-center justify-center text-xs font-bold transition-colors shadow-sm cursor-pointer"
+                  title="Disminuir cantidad"
+                >
+                  -
+                </button>
+                <input 
+                  type="number" 
+                  min="1" 
+                  max="9999" 
+                  data-action="input-qty" 
+                  data-id="${pieza.id}" 
+                  value="${cantidadActual}" 
+                  class="w-12 text-center bg-transparent text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none"
+                />
+                <button 
+                  type="button" 
+                  data-action="inc-qty" 
+                  data-id="${pieza.id}" 
+                  class="w-6 h-6 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 flex items-center justify-center text-xs font-bold transition-colors shadow-sm cursor-pointer"
+                  title="Aumentar cantidad"
+                >
+                  +
+                </button>
+              </div>
             </div>
-          </div>
+          </td>
 
-        </div>
+        </tr>
       `;
     }).join('');
 
     actualizarBarraFlotante();
     if (onRefreshIcons) onRefreshIcons();
   } catch (error) {
-    console.error('Error al cargar piezas en selección:', error);
+    console.error('Error al cargar piezas en tabla de selección:', error);
   }
 }
 
 /**
- * Actualiza la barra flotante con el total de piezas y unidades
+ * Actualiza la barra flotante y el contador superior con el total de piezas y unidades
  */
 function actualizarBarraFlotante() {
   const barra = document.getElementById('barra-flotante-envio');
   const contador = document.getElementById('contador-seleccionadas');
+  const badgeTop = document.getElementById('badge-contador-top');
   const totalPiezasEl = document.getElementById('resumen-total-piezas');
   const totalUnidadesEl = document.getElementById('resumen-total-unidades');
 
@@ -216,6 +278,7 @@ function actualizarBarraFlotante() {
   });
 
   if (contador) contador.textContent = numTipos;
+  if (badgeTop) badgeTop.textContent = numTipos;
   if (totalPiezasEl) totalPiezasEl.textContent = numTipos;
   if (totalUnidadesEl) totalUnidadesEl.textContent = numUnidades;
 
@@ -235,13 +298,23 @@ function actualizarBarraFlotante() {
  */
 export function setupSeleccionListeners({ onToast, onRefreshIcons, onNavigateToControl, onDataChange }) {
   const filtroInput = document.getElementById('filtro-seleccion');
+  const btnClearSearch = document.getElementById('btn-clear-search-sel');
   const btnLimpiar = document.getElementById('btn-limpiar-seleccion');
+  const btnEnviarTop = document.getElementById('btn-enviar-top');
   const btnEnviar = document.getElementById('btn-enviar-produccion');
-  const grid = document.getElementById('grid-piezas-seleccion');
+  const tbody = document.getElementById('lista-seleccion-body');
 
   if (filtroInput) {
     filtroInput.addEventListener('input', (e) => {
       filtroBusqueda = e.target.value;
+      refrescarGridSeleccion(onRefreshIcons);
+    });
+  }
+
+  if (btnClearSearch) {
+    btnClearSearch.addEventListener('click', () => {
+      filtroBusqueda = '';
+      filtroInput.value = '';
       refrescarGridSeleccion(onRefreshIcons);
     });
   }
@@ -254,9 +327,9 @@ export function setupSeleccionListeners({ onToast, onRefreshIcons, onNavigateToC
     });
   }
 
-  // Delegación de eventos en las tarjetas
-  if (grid) {
-    grid.addEventListener('click', (e) => {
+  // Delegación de eventos en la tabla
+  if (tbody) {
+    tbody.addEventListener('click', (e) => {
       const toggleBtn = e.target.closest('button[data-action="toggle-check"]');
       const incBtn = e.target.closest('button[data-action="inc-qty"]');
       const decBtn = e.target.closest('button[data-action="dec-qty"]');
@@ -269,7 +342,10 @@ export function setupSeleccionListeners({ onToast, onRefreshIcons, onNavigateToC
         if (seleccionPiezas[id]) {
           delete seleccionPiezas[id];
         } else {
-          seleccionPiezas[id] = { pieza, cantidad: 1 };
+          // Obtener cantidad actual de la fila si existe
+          const qtyInput = tbody.querySelector(`input[data-action="input-qty"][data-id="${id}"]`);
+          const cant = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
+          seleccionPiezas[id] = { pieza, cantidad: cant };
         }
         refrescarGridSeleccion(onRefreshIcons);
       } else if (incBtn) {
@@ -300,7 +376,7 @@ export function setupSeleccionListeners({ onToast, onRefreshIcons, onNavigateToC
       }
     });
 
-    grid.addEventListener('change', (e) => {
+    tbody.addEventListener('change', (e) => {
       const qtyInput = e.target.closest('input[data-action="input-qty"]');
       if (qtyInput) {
         const id = Number(qtyInput.getAttribute('data-id'));
@@ -318,53 +394,59 @@ export function setupSeleccionListeners({ onToast, onRefreshIcons, onNavigateToC
     });
   }
 
-  // Enviar a Fabricar con Lógica de Fusión
+  // Función común para enviar piezas seleccionadas a producción
+  const ejecutarEnvioProduccion = async () => {
+    const items = Object.values(seleccionPiezas);
+    if (items.length === 0) {
+      onToast?.('Selecciona al menos una pieza para fabricar marcando su casilla', 'error');
+      return;
+    }
+
+    try {
+      let fusionadosCount = 0;
+      let nuevosCount = 0;
+
+      for (const item of items) {
+        const resultado = await trabajosService.agregarOFusionar({
+          piezaId: item.pieza.id,
+          codigo1: item.pieza.codigo1,
+          codigo2: item.pieza.codigo2,
+          descripcion: item.pieza.descripcion,
+          material: item.pieza.material,
+          cantidad: Number(item.cantidad || 1),
+          fechaCreacion: new Date().toISOString()
+        });
+
+        if (resultado.fusionado) {
+          fusionadosCount++;
+        } else {
+          nuevosCount++;
+        }
+      }
+
+      // Limpiar selección
+      seleccionPiezas = {};
+      actualizarBarraFlotante();
+      
+      let mensaje = `${nuevosCount} nuevo(s) trabajo(s) en proceso.`;
+      if (fusionadosCount > 0) {
+        mensaje += ` ${fusionadosCount} trabajo(s) existente(s) fueron fusionados sumando su cantidad.`;
+      }
+      onToast?.(mensaje, 'success');
+
+      if (onDataChange) await onDataChange();
+      if (onNavigateToControl) onNavigateToControl();
+    } catch (err) {
+      console.error(err);
+      onToast?.('Error al enviar trabajos: ' + err.message, 'error');
+    }
+  };
+
+  if (btnEnviarTop) {
+    btnEnviarTop.addEventListener('click', ejecutarEnvioProduccion);
+  }
+
   if (btnEnviar) {
-    btnEnviar.addEventListener('click', async () => {
-      const items = Object.values(seleccionPiezas);
-      if (items.length === 0) {
-        onToast?.('Selecciona al menos una pieza para fabricar', 'error');
-        return;
-      }
-
-      try {
-        let fusionadosCount = 0;
-        let nuevosCount = 0;
-
-        for (const item of items) {
-          const resultado = await trabajosService.agregarOFusionar({
-            piezaId: item.pieza.id,
-            codigo1: item.pieza.codigo1,
-            codigo2: item.pieza.codigo2,
-            descripcion: item.pieza.descripcion,
-            material: item.pieza.material,
-            cantidad: Number(item.cantidad || 1),
-            fechaCreacion: new Date().toISOString()
-          });
-
-          if (resultado.fusionado) {
-            fusionadosCount++;
-          } else {
-            nuevosCount++;
-          }
-        }
-
-        // Limpiar selección
-        seleccionPiezas = {};
-        actualizarBarraFlotante();
-        
-        let mensaje = `${nuevosCount} nuevo(s) trabajo(s) en proceso.`;
-        if (fusionadosCount > 0) {
-          mensaje += ` ${fusionadosCount} trabajo(s) existente(s) fueron fusionados sumando su cantidad.`;
-        }
-        onToast?.(mensaje, 'success');
-
-        if (onDataChange) await onDataChange();
-        if (onNavigateToControl) onNavigateToControl();
-      } catch (err) {
-        console.error(err);
-        onToast?.('Error al enviar trabajos: ' + err.message, 'error');
-      }
-    });
+    btnEnviar.addEventListener('click', ejecutarEnvioProduccion);
   }
 }

@@ -144,6 +144,10 @@ export function renderModalConfig() {
               <span>Modo Offline PWA:</span>
               <span class="text-emerald-600 dark:text-emerald-400 font-semibold">100% Autónomo</span>
             </div>
+            <div class="flex justify-between items-center">
+              <span>Soporte:</span>
+              <a href="mailto:j.huamayalli@gmail.com" class="text-cyan-600 dark:text-cyan-400 font-semibold hover:underline transition-colors">j.huamayalli@gmail.com</a>
+            </div>
           </div>
 
         </div>
