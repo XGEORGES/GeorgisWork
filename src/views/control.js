@@ -3,38 +3,36 @@ import { trabajosService, intervalosService, calcularTiempoTotal } from '../db.j
 let cronometroIntervalId = null;
 let trabajosActivosCache = [];
 
-/**
- * Renderiza la interfaz de la Pantalla 3 (Control en Vivo de Trabajos - Estilo Telemetría CNC / Syntrix)
- */
 export function renderControlView() {
   return `
-    <div class="space-y-6 pb-16">
+    <div class="space-y-6 pb-20">
       
-      <!-- Encabezado de la Pantalla 3 -->
+      <!-- Encabezado -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-bold text-white flex items-center gap-2.5">
-            <i data-lucide="play-circle" class="w-7 h-7 text-cyan-400"></i>
-            <span>Control en Vivo de Trabajos CNC</span>
+          <h1 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+            <i data-lucide="play-circle" class="w-7 h-7 text-cyan-600 dark:text-cyan-400"></i>
+            <span class="tracking-tight">Control en Vivo de Trabajos CNC</span>
           </h1>
-          <p class="text-sm text-slate-400 mt-1">Telemetría de producción en tiempo real, registro de intervalos y cronómetros de mecanizado.</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Telemetría de producción en tiempo real, registro de intervalos y monitoreo de mecanizado.</p>
         </div>
 
-        <!-- Indicador de Trabajos Activos -->
         <div class="flex items-center space-x-2">
-          <div class="px-3.5 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono font-bold flex items-center space-x-2 shadow-sm shadow-cyan-500/10">
-            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
-            <span>Línea Activa: <span id="contador-trabajos-activos">0</span></span>
+          <div class="px-4 py-2 rounded-xl bg-slate-200/80 dark:bg-slate-900/90 border border-slate-300 dark:border-cyan-500/30 text-cyan-700 dark:text-cyan-300 text-xs font-mono font-bold flex items-center space-x-2.5 shadow-md">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span>
+            </span>
+            <span>Línea Activa: <strong id="contador-trabajos-activos" class="text-slate-900 dark:text-white text-sm">0</strong></span>
           </div>
         </div>
       </div>
 
-      <!-- Contenedor de Trabajos en Proceso -->
+      <!-- Contenedor Dinámico -->
       <div id="lista-trabajos-control" class="space-y-5">
-        <!-- Renderizado dinámico -->
-        <div class="py-16 text-center text-slate-500 bg-slate-900/65 backdrop-blur-2xl border border-slate-800/80 rounded-2xl shadow-2xl shadow-black/60 p-8">
-          <i data-lucide="loader-2" class="w-8 h-8 animate-spin text-cyan-400 mx-auto mb-3"></i>
-          <p class="text-xs font-medium text-slate-300">Conectando telemetría de producción...</p>
+        <div class="py-16 text-center text-slate-500 glass-card p-8">
+          <i data-lucide="loader-2" class="w-8 h-8 animate-spin text-cyan-500 mx-auto mb-3"></i>
+          <p class="text-xs font-medium font-mono text-slate-600 dark:text-slate-300">Conectando telemetría de producción...</p>
         </div>
       </div>
 
@@ -42,9 +40,6 @@ export function renderControlView() {
   `;
 }
 
-/**
- * Carga y renderiza todos los trabajos activos con sus estados y cronómetros estilo Telemetría
- */
 export async function refrescarControlTrabajos(onRefreshIcons) {
   try {
     trabajosActivosCache = await trabajosService.obtenerActivos();
@@ -56,13 +51,13 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
 
     if (trabajosActivosCache.length === 0) {
       container.innerHTML = `
-        <div class="py-16 text-center text-slate-500 bg-slate-900/65 backdrop-blur-2xl border border-slate-800/80 rounded-2xl shadow-2xl shadow-black/60 p-8">
-          <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 mx-auto mb-3 border border-cyan-500/30 shadow-md shadow-cyan-500/10">
-            <i data-lucide="play-circle" class="w-7 h-7"></i>
+        <div class="py-16 text-center glass-panel p-8">
+          <div class="w-16 h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-600 dark:text-cyan-400 mx-auto mb-4 border border-cyan-500/30 shadow-md">
+            <i data-lucide="play-circle" class="w-8 h-8"></i>
           </div>
-          <h3 class="text-sm font-bold text-white">No hay trabajos en la línea de producción</h3>
-          <p class="text-xs text-slate-400 mt-1.5 max-w-md mx-auto">
-            Ve a la <strong class="text-cyan-400 font-semibold">Pantalla 2 (Selección)</strong> para enviar piezas a fabricar.
+          <h3 class="text-base font-bold text-slate-900 dark:text-white tracking-tight">No hay trabajos en la línea de producción</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 max-w-md mx-auto leading-relaxed">
+            Ve a la pestaña <strong class="text-cyan-600 dark:text-cyan-400 font-semibold">2. Selección</strong> para enviar piezas al cronómetro de mecanizado.
           </p>
         </div>
       `;
@@ -71,7 +66,6 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
       return;
     }
 
-    // Obtener intervalos para cada trabajo en paralelo
     const trabajosConInfo = await Promise.all(
       trabajosActivosCache.map(async (t) => {
         const intervalos = await intervalosService.obtenerPorTrabajo(t.id);
@@ -81,43 +75,42 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
       })
     );
 
-    // Verificar si hay algún trabajo actualmente fabricando (concurrencia de máquina)
     const hayMaquinaOcupada = trabajosConInfo.some(t => t.estado === 'fabricando');
 
     container.innerHTML = trabajosConInfo.map(t => {
       const isFabricando = t.estado === 'fabricando';
       const isPausado = t.estado === 'pausado';
 
-      // Estado Badge Telemetría
       let badgeHtml = '';
       if (isFabricando) {
         badgeHtml = `
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/40 shadow-sm shadow-emerald-500/20">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping mr-1.5"></span>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/40 shadow-md">
+            <span class="relative flex h-2 w-2 mr-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
             MECANIZANDO
           </span>
         `;
       } else if (isPausado) {
         badgeHtml = `
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-500/15 text-amber-400 border border-amber-500/40">
-            <span class="w-2 h-2 rounded-full bg-amber-400 mr-1.5"></span>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/40 shadow-md">
+            <span class="w-2 h-2 rounded-full bg-amber-500 mr-2"></span>
             EN PAUSA
           </span>
         `;
       } else {
         badgeHtml = `
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700">
-            <span class="w-2 h-2 rounded-full bg-slate-500 mr-1.5"></span>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-semibold bg-slate-200 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700/60">
+            <span class="w-2 h-2 rounded-full bg-slate-400 mr-2"></span>
             EN COLA
           </span>
         `;
       }
 
-      // Restricción concurrencia
       const maquinaOcupadaPorOtro = hayMaquinaOcupada && !isFabricando;
       const puedeTerminar = t.tieneIntervalos;
 
-      // Botón Empezar o Pausar
       let btnAccionHtml = '';
       if (!isFabricando) {
         if (maquinaOcupadaPorOtro) {
@@ -126,7 +119,7 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
               type="button" 
               disabled
               title="Máquina ocupada: pausa el trabajo actual para iniciar otro"
-              class="px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800/50 text-slate-500 border border-slate-800 flex items-center space-x-1.5 cursor-not-allowed opacity-60 select-none"
+              class="px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-200 dark:bg-slate-800/40 text-slate-400 dark:text-slate-500 border border-slate-300 dark:border-slate-800 flex items-center space-x-2 cursor-not-allowed opacity-60 select-none"
             >
               <i data-lucide="lock" class="w-4 h-4"></i>
               <span>${isPausado ? 'Reanudar' : 'Empezar'}</span>
@@ -138,9 +131,9 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
               type="button" 
               data-action="empezar" 
               data-id="${t.id}" 
-              class="px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-500/25 flex items-center space-x-1.5 transition-all transform active:scale-95 cursor-pointer"
+              class="px-5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 shadow-lg shadow-emerald-500/30 flex items-center space-x-2 transition-all transform active:scale-95 cursor-pointer"
             >
-              <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+              <i data-lucide="play" class="w-4 h-4 fill-slate-950"></i>
               <span>${isPausado ? 'Reanudar' : 'Empezar'}</span>
             </button>
           `;
@@ -151,93 +144,113 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
             type="button" 
             data-action="pausar" 
             data-id="${t.id}" 
-            class="px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white shadow-lg shadow-amber-500/25 flex items-center space-x-1.5 transition-all transform active:scale-95 cursor-pointer"
+            class="px-5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 shadow-lg shadow-amber-500/30 flex items-center space-x-2 transition-all transform active:scale-95 cursor-pointer"
           >
-            <i data-lucide="pause" class="w-4 h-4 fill-white"></i>
+            <i data-lucide="pause" class="w-4 h-4 fill-slate-950"></i>
             <span>Pausar</span>
           </button>
         `;
       }
 
-      // Estilo de tarjeta según estado Telemetría
-      let cardBorderClass = 'border-slate-800/80 bg-slate-900/65';
+      let cardBorder = '';
       if (isFabricando) {
-        cardBorderClass = 'border-emerald-500/50 shadow-xl shadow-emerald-950/40 ring-1 ring-emerald-500/30 bg-slate-900/90 glow-emerald';
+        cardBorder = 'border-emerald-500 ring-2 ring-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.15)]';
       } else if (isPausado) {
-        cardBorderClass = 'border-amber-500/40 shadow-lg shadow-amber-950/20 ring-1 ring-amber-500/20 bg-slate-900/90';
+        cardBorder = 'border-amber-500 ring-2 ring-amber-500/30 shadow-[0_0_25px_rgba(245,158,11,0.12)]';
       } else if (maquinaOcupadaPorOtro) {
-        cardBorderClass = 'border-slate-800/40 bg-slate-900/40 opacity-70';
+        cardBorder = 'opacity-65';
       }
 
+      const totalSeg = Math.floor((t.tiempoInfo?.totalMs || 0) / 1000);
+      const dashOffset = 283 - (Math.min(totalSeg % 3600, 3600) / 3600) * 283;
+      const strokeColor = isFabricando ? '#10b981' : isPausado ? '#f59e0b' : '#94a3b8';
+
       return `
-        <div class="rounded-2xl p-5 sm:p-6 border transition-all duration-300 backdrop-blur-2xl shadow-2xl shadow-black/60 ${cardBorderClass}">
+        <div class="glass-card p-6 border backdrop-blur-2xl shadow-xl transition-all duration-300 ${cardBorder}">
           
-          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             
-            <!-- Columna Izquierda: Identificación & Especificaciones -->
-            <div class="space-y-2.5 flex-1">
+            <!-- Columna Izquierda -->
+            <div class="space-y-3 flex-1 min-w-[260px]">
               <div class="flex flex-wrap items-center gap-2">
-                <span class="font-mono text-xs font-bold text-cyan-400 px-2.5 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/25">
+                <span class="inline-flex items-center px-3 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-300 font-mono font-bold text-xs shadow-sm">
                   ${t.codigo1 || 'S/C'}
                 </span>
-                ${t.codigo2 ? `<span class="font-mono text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700/60 font-semibold">${t.codigo2}</span>` : ''}
-                <span class="bg-slate-800/70 border border-slate-700/50 text-cyan-300 font-mono text-xs px-3 py-1 rounded-full shadow-inner inline-flex items-center">
+                ${t.codigo2 ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800/90 text-slate-800 dark:text-slate-300 border border-slate-300 dark:border-slate-700 font-mono text-xs font-semibold">${t.codigo2}</span>` : ''}
+                <span class="inline-flex items-center px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 font-mono text-xs shadow-inner font-medium">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 mr-2"></span>
                   ${t.material || 'Material'}
                 </span>
                 ${badgeHtml}
-                ${maquinaOcupadaPorOtro ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-800/60 text-slate-500 border border-slate-700/40"><i data-lucide="lock" class="w-3 h-3 mr-1"></i>Bloqueado</span>` : ''}
+                ${maquinaOcupadaPorOtro ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-mono bg-slate-200 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700/50"><i data-lucide="lock" class="w-3 h-3 mr-1"></i>Bloqueado</span>` : ''}
               </div>
 
               <div>
-                <h3 class="text-base font-bold text-white tracking-tight">${t.descripcion}</h3>
-                <div class="flex items-center space-x-3 text-xs text-slate-400 mt-1">
-                  <span>Cantidad a fabricar: <strong class="text-white font-mono text-sm">${t.cantidad}</strong> unidades</span>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white tracking-tight">${t.descripcion}</h3>
+                <div class="flex items-center space-x-3 text-xs text-slate-500 dark:text-slate-400 mt-1.5 font-mono">
+                  <span>Cantidad: <strong class="text-slate-900 dark:text-white text-sm font-bold">${t.cantidad}</strong> u.</span>
                   <span>•</span>
-                  <span>Intervalos: <strong class="text-slate-300 font-mono">${t.intervalos.length}</strong></span>
+                  <span>Intervalos: <strong class="text-cyan-600 dark:text-cyan-400 font-bold">${t.intervalos.length}</strong></span>
                 </div>
               </div>
             </div>
 
-            <!-- Columna Central: Cronómetro CNC Gran Tamaño (text-5xl font-mono) -->
-            <div class="flex flex-col items-center justify-center px-6 py-4 rounded-2xl bg-slate-950/90 border border-slate-800 min-w-[250px] shadow-inner">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full ${isFabricando ? 'bg-emerald-400 animate-ping' : isPausado ? 'bg-amber-400' : 'bg-slate-500'}"></span>
-                <span>TIEMPO NETO TRABAJADO</span>
-              </span>
-              
-              <div class="font-mono text-5xl font-bold tracking-tight ${isFabricando ? 'text-emerald-400 animate-pulse glow-emerald' : isPausado ? 'text-amber-400 glow-amber' : 'text-slate-100'}">
-                ${t.tiempoInfo.formateado}
+            <!-- Columna Central: Dial Gauge -->
+            <div class="flex items-center justify-center p-4 rounded-2xl bg-slate-100 dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 shadow-inner">
+              <div class="relative flex items-center justify-center w-36 h-36">
+                
+                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="42" stroke="currentColor" class="text-slate-300 dark:text-slate-800" stroke-width="6" fill="transparent" />
+                  <circle 
+                    cx="50" 
+                    cy="50" 
+                    r="42" 
+                    stroke="${strokeColor}" 
+                    stroke-width="6" 
+                    stroke-linecap="round" 
+                    stroke-dasharray="283" 
+                    stroke-dashoffset="${dashOffset}" 
+                    fill="transparent" 
+                    class="transition-all duration-1000 ease-linear"
+                    style="filter: drop-shadow(0 0 6px ${strokeColor});"
+                  />
+                </svg>
+
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                  <span class="text-[9px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">TIEMPO</span>
+                  <div class="font-mono text-xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
+                    ${t.tiempoInfo.formateado}
+                  </div>
+                  <span class="text-[10px] font-mono font-medium text-slate-500 dark:text-slate-400 mt-0.5">
+                    ${formatearSegundosExactos(t.tiempoInfo.totalMs)}
+                  </span>
+                </div>
+
               </div>
-              
-              <span class="text-[11px] text-slate-500 font-mono mt-1">
-                ${formatearSegundosExactos(t.tiempoInfo.totalMs)}
-              </span>
             </div>
 
-            <!-- Columna Derecha: Botones Ergonómicos de Control -->
-            <div class="flex items-center justify-end gap-2.5 flex-wrap">
+            <!-- Columna Derecha -->
+            <div class="flex lg:flex-col items-center justify-end gap-2.5">
               
               ${btnAccionHtml}
 
-              <!-- Botón Terminar (Con validación de intervalos) -->
               <button 
                 type="button" 
                 data-action="terminar" 
                 data-id="${t.id}" 
                 ${!puedeTerminar ? 'disabled title="Debes iniciar el trabajo al menos una vez antes de terminarlo"' : ''}
-                class="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition-all ${puedeTerminar ? 'bg-cyan-600 hover:bg-cyan-500 text-white shadow-lg shadow-cyan-500/25 active:scale-95 cursor-pointer' : 'bg-slate-800 text-slate-500 border border-slate-700/50 cursor-not-allowed opacity-60'}"
+                class="px-5 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-2 transition-all ${puedeTerminar ? 'bg-slate-200 dark:bg-slate-800 hover:bg-cyan-600 hover:text-white text-slate-800 dark:text-cyan-400 border border-slate-300 dark:border-cyan-500/30 shadow-md active:scale-95 cursor-pointer' : 'bg-slate-100 dark:bg-slate-900 text-slate-400 dark:text-slate-600 border border-slate-200 dark:border-slate-800/60 cursor-not-allowed opacity-40'}"
               >
                 <i data-lucide="check" class="w-4 h-4"></i>
                 <span>Terminar</span>
               </button>
 
-              <!-- Botón Descartar / Cancelar Trabajo -->
               <button 
                 type="button" 
                 data-action="eliminar-trabajo" 
                 data-id="${t.id}" 
                 title="Descartar este trabajo de la línea" 
-                class="p-2.5 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                class="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/30 transition-all cursor-pointer"
               >
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
@@ -257,9 +270,6 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
   }
 }
 
-/**
- * Formato auxiliar hh:mm:ss exacto
- */
 function formatearSegundosExactos(ms) {
   const totalSeg = Math.floor(ms / 1000);
   const h = Math.floor(totalSeg / 3600);
@@ -268,17 +278,13 @@ function formatearSegundosExactos(ms) {
   return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 }
 
-/**
- * Ciclo de temporizador para refrescar cronómetros activos cada segundo
- */
 function iniciarTimerLoop(onRefreshIcons) {
   detenerTimerLoop();
-  
+
   const hayFabricando = trabajosActivosCache.some(t => t.estado === 'fabricando');
   if (!hayFabricando) return;
 
   cronometroIntervalId = setInterval(async () => {
-    // Si la vista sigue activa en el DOM, refrescar datos
     const container = document.getElementById('lista-trabajos-control');
     if (!container) {
       detenerTimerLoop();
@@ -295,9 +301,6 @@ export function detenerTimerLoop() {
   }
 }
 
-/**
- * Configura los event listeners para las acciones Empezar, Pausar, Terminar
- */
 export function setupControlListeners({ onToast, onRefreshIcons, onDataChange, onNavigateToHistorial }) {
   const container = document.getElementById('lista-trabajos-control');
 
@@ -312,10 +315,10 @@ export function setupControlListeners({ onToast, onRefreshIcons, onDataChange, o
         const id = Number(empezarBtn.getAttribute('data-id'));
         await intervalosService.registrarEvento(id, 'empezar');
         await trabajosService.actualizarEstado(id, 'fabricando');
-        onToast?.('Mecanizado iniciado / reanudado', 'success');
+        onToast?.('Mecanizado iniciado', 'success');
         await refrescarControlTrabajos(onRefreshIcons);
         if (onDataChange) onDataChange();
-      } 
+      }
       else if (pausarBtn) {
         const id = Number(pausarBtn.getAttribute('data-id'));
         await intervalosService.registrarEvento(id, 'pausar');
@@ -323,11 +326,9 @@ export function setupControlListeners({ onToast, onRefreshIcons, onDataChange, o
         onToast?.('Mecanizado pausado', 'info');
         await refrescarControlTrabajos(onRefreshIcons);
         if (onDataChange) onDataChange();
-      } 
+      }
       else if (terminarBtn) {
         const id = Number(terminarBtn.getAttribute('data-id'));
-        
-        // Verificar si tiene intervalos antes de terminar
         const intervalos = await intervalosService.obtenerPorTrabajo(id);
         if (!intervalos || intervalos.length === 0) {
           onToast?.('Debes hacer clic en Empezar al menos una vez antes de terminar el trabajo', 'error');
@@ -335,22 +336,21 @@ export function setupControlListeners({ onToast, onRefreshIcons, onDataChange, o
         }
 
         const trabajo = await trabajosService.obtenerPorId(id);
-        const confirmacion = confirm(`¿Confirmar finalización del trabajo "${trabajo.codigo1} - ${trabajo.descripcion}"? Se guardará en el Historial.`);
+        const confirmacion = confirm(`¿Confirmar finalización del trabajo "${trabajo.codigo1} - ${trabajo.descripcion}"?`);
         if (!confirmacion) return;
 
-        // Registrar evento final y marcar como terminado
         await intervalosService.registrarEvento(id, 'terminar');
         await trabajosService.actualizarEstado(id, 'terminado', new Date().toISOString());
-        
+
         onToast?.(`Trabajo ${trabajo.codigo1} concluido con éxito`, 'success');
         await refrescarControlTrabajos(onRefreshIcons);
         if (onDataChange) onDataChange();
         if (onNavigateToHistorial) onNavigateToHistorial();
-      } 
+      }
       else if (eliminarBtn) {
         const id = Number(eliminarBtn.getAttribute('data-id'));
         const trabajo = await trabajosService.obtenerPorId(id);
-        const confirmacion = confirm(`¿Deseas descartar el trabajo "${trabajo.codigo1}" de la línea de producción?`);
+        const confirmacion = confirm(`¿Deseas descartar el trabajo "${trabajo.codigo1}" de la línea?`);
         if (confirmacion) {
           await trabajosService.eliminar(id);
           onToast?.('Trabajo descartado', 'info');

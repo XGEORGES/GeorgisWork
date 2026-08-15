@@ -47,7 +47,8 @@ import {
   intervalosService, 
   configService, 
   backupService, 
-  checkDatabaseHealth 
+  checkDatabaseHealth,
+  seedDemoPiezas
 } from './db.js';
 import { renderCatalogoView, setupCatalogoListeners, refrescarListaPiezas } from './views/catalogo.js';
 import { renderSeleccionView, setupSeleccionListeners, refrescarGridSeleccion } from './views/seleccion.js';
@@ -396,6 +397,7 @@ function registerServiceWorker() {
 // ============================================================================
 async function initApp() {
   await initTheme();
+  await seedDemoPiezas(); // Insertar piezas demo si la DB está vacía
   setupGlobalEventListeners();
   registerServiceWorker();
   await navigateTo('catalogo');
