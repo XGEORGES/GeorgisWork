@@ -2,7 +2,7 @@
   "name": "GeorgisWork - Gestión de Trabajos CNC",
   "short_name": "GeorgisWork",
   "description": "Sistema PWA local para control de producción CNC, cronómetros y reporte de horas extras.",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
