@@ -1,0 +1,42 @@
+{
+  "name": "GeorgisWork - Gestión de Trabajos CNC",
+  "short_name": "GeorgisWork",
+  "description": "Sistema PWA local para control de producción CNC, cronómetros y reporte de horas extras.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#020617",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Catálogo",
+      "short_name": "Catálogo",
+      "description": "Abrir catálogo de piezas",
+      "url": "./index.html#catalogo",
+      "icons": [{ "src": "./icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Control en Vivo",
+      "short_name": "Control",
+      "description": "Ver trabajos en proceso",
+      "url": "./index.html#control",
+      "icons": [{ "src": "./icon.png", "sizes": "192x192" }]
+    }
+  ]
+}
