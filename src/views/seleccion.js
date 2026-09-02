@@ -124,7 +124,12 @@ export async function refrescarGridSeleccion(onRefreshIcons) {
       return (p.codigo1 && p.codigo1.toLowerCase().includes(query)) ||
         (p.codigo2 && p.codigo2.toLowerCase().includes(query)) ||
         (p.descripcion && p.descripcion.toLowerCase().includes(query)) ||
-        (p.material && p.material.toLowerCase().includes(query));
+        (p.material && p.material.toLowerCase().includes(query)) ||
+        (p.largo && String(p.largo).toLowerCase().includes(query)) ||
+        (p.ancho && String(p.ancho).toLowerCase().includes(query)) ||
+        (p.espesor && String(p.espesor).toLowerCase().includes(query)) ||
+        (p.di && String(p.di).toLowerCase().includes(query)) ||
+        (p.de && String(p.de).toLowerCase().includes(query));
     });
 
     const container = document.getElementById('lista-seleccion-container');
