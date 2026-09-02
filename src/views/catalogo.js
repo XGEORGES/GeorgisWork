@@ -329,22 +329,30 @@ export async function refrescarListaPiezas(onDataChangeCallback) {
             <div class="flex-1 pr-2">
               <span class="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">${pieza.descripcion || '-'}</span>
               ${(() => {
-                const tienePrism = pieza.largo || pieza.ancho || pieza.espesor;
-                const tieneDiam = pieza.de || pieza.di;
+                const tienePrism = Boolean(pieza.largo || pieza.ancho || pieza.espesor);
+                const tieneDiam = Boolean(pieza.de || pieza.di);
                 if (!tienePrism && !tieneDiam) return '';
 
-                const partes = [];
+                const pastillas = [];
                 if (tienePrism) {
-                  partes.push(`Tocho: ${pieza.largo || '-'} × ${pieza.ancho || '-'} × ${pieza.espesor || '-'} mm`);
+                  pastillas.push(`
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 font-medium">
+                      <span>📏 Tocho:</span>
+                      <span>${pieza.largo || '-'} × ${pieza.ancho || '-'} × ${pieza.espesor || '-'} mm</span>
+                    </span>
+                  `);
                 }
                 if (tieneDiam) {
-                  partes.push(`Ø Ext (DE): ${pieza.de || '-'} mm • Ø Int (DI): ${pieza.di || '-'} mm`);
-                }
-                return `
-                  <div>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 text-[11px] font-mono text-slate-600 dark:text-slate-400 mt-1">
-                      ${partes.join(' | ')}
+                  pastillas.push(`
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 font-medium">
+                      <span>⭕ Ø Ext: ${pieza.de || '-'} mm • Ø Int: ${pieza.di || '-'} mm</span>
                     </span>
+                  `);
+                }
+
+                return `
+                  <div class="mt-1 flex flex-wrap items-center gap-1.5 text-[11px] font-mono">
+                    ${pastillas.join('<span class="text-slate-400 dark:text-slate-600 font-bold select-none">•</span>')}
                   </div>
                 `;
               })()}
