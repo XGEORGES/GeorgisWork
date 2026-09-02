@@ -131,6 +131,60 @@ export function renderCatalogoView() {
               </div>
             </div>
 
+            <!-- Dimensiones de Tocho / Material Bruto -->
+            <div class="border-t border-slate-200 dark:border-slate-800/80 pt-4 mt-2">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
+                DIMENSIONES DE TOCHO / MATERIAL BRUTO (MM) — OPCIONAL
+              </label>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                <div>
+                  <label for="largo" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Largo (mm)</label>
+                  <input 
+                    type="text" 
+                    id="largo" 
+                    placeholder="Ej. 230" 
+                    class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-2 px-3 placeholder-slate-400 shadow-inner transition-colors"
+                  />
+                </div>
+                <div>
+                  <label for="ancho" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Ancho (mm)</label>
+                  <input 
+                    type="text" 
+                    id="ancho" 
+                    placeholder="Ej. 80" 
+                    class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-2 px-3 placeholder-slate-400 shadow-inner transition-colors"
+                  />
+                </div>
+                <div>
+                  <label for="espesor" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Espesor (mm)</label>
+                  <input 
+                    type="text" 
+                    id="espesor" 
+                    placeholder="Ej. 38 o 1-1/2&quot;" 
+                    class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-2 px-3 placeholder-slate-400 shadow-inner transition-colors"
+                  />
+                </div>
+                <div>
+                  <label for="di" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">D.I. (mm)</label>
+                  <input 
+                    type="text" 
+                    id="di" 
+                    placeholder="Ø Interior (ej. 560)" 
+                    class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-2 px-3 placeholder-slate-400 shadow-inner transition-colors"
+                  />
+                </div>
+                <div>
+                  <label for="de" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">D.E. (mm)</label>
+                  <input 
+                    type="text" 
+                    id="de" 
+                    placeholder="Ø Exterior (ej. 630)" 
+                    class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-2 px-3 placeholder-slate-400 shadow-inner transition-colors"
+                  />
+                </div>
+              </div>
+            </div>
+
             <div class="flex items-center justify-end space-x-2.5 pt-3">
               <button 
                 type="button" 
@@ -274,6 +328,26 @@ export async function refrescarListaPiezas(onDataChangeCallback) {
             <!-- Columna 3: Descripción -->
             <div class="flex-1 pr-2">
               <span class="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">${pieza.descripcion || '-'}</span>
+              ${(() => {
+                const tienePrism = pieza.largo || pieza.ancho || pieza.espesor;
+                const tieneDiam = pieza.de || pieza.di;
+                if (!tienePrism && !tieneDiam) return '';
+
+                const partes = [];
+                if (tienePrism) {
+                  partes.push(`Tocho: ${pieza.largo || '-'} × ${pieza.ancho || '-'} × ${pieza.espesor || '-'} mm`);
+                }
+                if (tieneDiam) {
+                  partes.push(`Ø Ext (DE): ${pieza.de || '-'} mm • Ø Int (DI): ${pieza.di || '-'} mm`);
+                }
+                return `
+                  <div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 text-[11px] font-mono text-slate-600 dark:text-slate-400 mt-1">
+                      ${partes.join(' | ')}
+                    </span>
+                  </div>
+                `;
+              })()}
             </div>
 
             <!-- Columna 4: Material -->
@@ -335,6 +409,11 @@ export function setupCatalogoListeners({ onToast, onRefreshIcons, onDataChange }
   const materialSelect = document.getElementById('material-select');
   const materialCustom = document.getElementById('material-custom');
   const descripcionInput = document.getElementById('descripcion');
+  const largoInput = document.getElementById('largo');
+  const anchoInput = document.getElementById('ancho');
+  const espesorInput = document.getElementById('espesor');
+  const diInput = document.getElementById('di');
+  const deInput = document.getElementById('de');
 
   const filtroBusquedaInput = document.getElementById('filtro-busqueda');
   const filtroMaterialSelect = document.getElementById('filtro-material');
@@ -349,6 +428,11 @@ export function setupCatalogoListeners({ onToast, onRefreshIcons, onDataChange }
       if (codigo1Input) codigo1Input.value = pieza.codigo1 || '';
       if (codigo2Input) codigo2Input.value = pieza.codigo2 || '';
       if (descripcionInput) descripcionInput.value = pieza.descripcion || '';
+      if (largoInput) largoInput.value = pieza.largo || '';
+      if (anchoInput) anchoInput.value = pieza.ancho || '';
+      if (espesorInput) espesorInput.value = pieza.espesor || '';
+      if (diInput) diInput.value = pieza.di || '';
+      if (deInput) deInput.value = pieza.de || '';
 
       if (MATERIALES_CNC.includes(pieza.material)) {
         if (materialSelect) materialSelect.value = pieza.material;
@@ -369,6 +453,11 @@ export function setupCatalogoListeners({ onToast, onRefreshIcons, onDataChange }
       if (btnSaveText) btnSaveText.textContent = 'Guardar Pieza';
       if (form) form.reset();
       if (idInput) idInput.value = '';
+      if (largoInput) largoInput.value = '';
+      if (anchoInput) anchoInput.value = '';
+      if (espesorInput) espesorInput.value = '';
+      if (diInput) diInput.value = '';
+      if (deInput) deInput.value = '';
       if (materialCustom) {
         materialCustom.value = '';
         materialCustom.classList.add('hidden');
@@ -387,6 +476,11 @@ export function setupCatalogoListeners({ onToast, onRefreshIcons, onDataChange }
     piezaEnEdicionId = null;
     if (form) form.reset();
     if (idInput) idInput.value = '';
+    if (largoInput) largoInput.value = '';
+    if (anchoInput) anchoInput.value = '';
+    if (espesorInput) espesorInput.value = '';
+    if (diInput) diInput.value = '';
+    if (deInput) deInput.value = '';
     if (formContainer) formContainer.classList.add('hidden');
     if (materialCustom) materialCustom.classList.add('hidden');
   };
@@ -422,6 +516,11 @@ export function setupCatalogoListeners({ onToast, onRefreshIcons, onDataChange }
       const codigo1 = codigo1Input.value.trim();
       const codigo2 = codigo2Input.value.trim();
       const descripcion = descripcionInput.value.trim();
+      const largo = largoInput ? largoInput.value.trim() : '';
+      const ancho = anchoInput ? anchoInput.value.trim() : '';
+      const espesor = espesorInput ? espesorInput.value.trim() : '';
+      const di = diInput ? diInput.value.trim() : '';
+      const de = deInput ? deInput.value.trim() : '';
       let material = materialSelect.value;
       if (material === 'Otro') {
         material = materialCustom.value.trim() || 'Otro';
@@ -433,11 +532,23 @@ export function setupCatalogoListeners({ onToast, onRefreshIcons, onDataChange }
       }
 
       try {
+        const payload = {
+          codigo1,
+          codigo2,
+          descripcion,
+          material,
+          largo,
+          ancho,
+          espesor,
+          di,
+          de
+        };
+
         if (piezaEnEdicionId) {
-          await piezasService.actualizar(piezaEnEdicionId, { codigo1, codigo2, descripcion, material });
+          await piezasService.actualizar(piezaEnEdicionId, payload);
           onToast?.(`Pieza ${codigo1} actualizada`, 'success');
         } else {
-          await piezasService.agregar({ codigo1, codigo2, descripcion, material, fechaCreacion: new Date().toISOString() });
+          await piezasService.agregar({ ...payload, fechaCreacion: new Date().toISOString() });
           onToast?.(`Pieza ${codigo1} registrada`, 'success');
         }
 

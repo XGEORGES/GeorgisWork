@@ -181,6 +181,26 @@ export async function refrescarGridSeleccion(onRefreshIcons) {
           <!-- Descripción -->
           <div class="flex-1 pr-2">
             <span class="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">${pieza.descripcion || '-'}</span>
+            ${(() => {
+              const tienePrism = pieza.largo || pieza.ancho || pieza.espesor;
+              const tieneDiam = pieza.de || pieza.di;
+              if (!tienePrism && !tieneDiam) return '';
+
+              const partes = [];
+              if (tienePrism) {
+                partes.push(`Tocho: ${pieza.largo || '-'} × ${pieza.ancho || '-'} × ${pieza.espesor || '-'} mm`);
+              }
+              if (tieneDiam) {
+                partes.push(`Ø Ext (DE): ${pieza.de || '-'} mm • Ø Int (DI): ${pieza.di || '-'} mm`);
+              }
+              return `
+                <div>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 text-[11px] font-mono text-slate-600 dark:text-slate-400 mt-1">
+                    ${partes.join(' | ')}
+                  </span>
+                </div>
+              `;
+            })()}
           </div>
 
           <!-- Material -->
@@ -380,6 +400,11 @@ export function setupSeleccionListeners({ onToast, onRefreshIcons, onNavigateToC
           codigo2: item.pieza.codigo2,
           descripcion: item.pieza.descripcion,
           material: item.pieza.material,
+          largo: item.pieza.largo || '',
+          ancho: item.pieza.ancho || '',
+          espesor: item.pieza.espesor || '',
+          di: item.pieza.di || '',
+          de: item.pieza.de || '',
           cantidad: Number(item.cantidad || 1),
           fechaCreacion: new Date().toISOString()
         });

@@ -32,13 +32,34 @@ export const piezasService = {
       codigo2: pieza.codigo2?.trim() || '',
       descripcion: pieza.descripcion?.trim() || '',
       material: pieza.material?.trim() || '',
+      largo: pieza.largo != null ? String(pieza.largo).trim() : '',
+      ancho: pieza.ancho != null ? String(pieza.ancho).trim() : '',
+      espesor: pieza.espesor != null ? String(pieza.espesor).trim() : '',
+      di: pieza.di != null ? String(pieza.di).trim() : '',
+      de: pieza.de != null ? String(pieza.de).trim() : '',
       fechaCreacion: pieza.fechaCreacion || new Date().toISOString()
     };
     return await db.piezas.add(nuevaPieza);
   },
 
   async actualizar(id, cambios) {
-    return await db.piezas.update(Number(id), cambios);
+    const datosActualizados = { ...cambios };
+    if ('largo' in datosActualizados) {
+      datosActualizados.largo = datosActualizados.largo != null ? String(datosActualizados.largo).trim() : '';
+    }
+    if ('ancho' in datosActualizados) {
+      datosActualizados.ancho = datosActualizados.ancho != null ? String(datosActualizados.ancho).trim() : '';
+    }
+    if ('espesor' in datosActualizados) {
+      datosActualizados.espesor = datosActualizados.espesor != null ? String(datosActualizados.espesor).trim() : '';
+    }
+    if ('di' in datosActualizados) {
+      datosActualizados.di = datosActualizados.di != null ? String(datosActualizados.di).trim() : '';
+    }
+    if ('de' in datosActualizados) {
+      datosActualizados.de = datosActualizados.de != null ? String(datosActualizados.de).trim() : '';
+    }
+    return await db.piezas.update(Number(id), datosActualizados);
   },
 
   async eliminar(id) {
@@ -109,6 +130,11 @@ export const trabajosService = {
           codigo2: trabajoData.codigo2 || '',
           descripcion: trabajoData.descripcion || '',
           material: trabajoData.material || '',
+          largo: trabajoData.largo != null ? String(trabajoData.largo).trim() : '',
+          ancho: trabajoData.ancho != null ? String(trabajoData.ancho).trim() : '',
+          espesor: trabajoData.espesor != null ? String(trabajoData.espesor).trim() : '',
+          di: trabajoData.di != null ? String(trabajoData.di).trim() : '',
+          de: trabajoData.de != null ? String(trabajoData.de).trim() : '',
           cantidad: Number(trabajoData.cantidad || 1),
           estado: 'pendiente',
           fechaCreacion: trabajoData.fechaCreacion || new Date().toISOString(),

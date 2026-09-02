@@ -38,7 +38,8 @@ import {
   FileText,
   Calculator,
   UploadCloud,
-  Lock
+  Lock,
+  Box
 } from 'lucide';
 import { 
   db, 
@@ -102,7 +103,8 @@ const appIcons = {
   FileText,
   Calculator,
   UploadCloud,
-  Lock
+  Lock,
+  Box
 };
 
 // ============================================================================

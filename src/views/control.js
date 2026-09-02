@@ -192,6 +192,26 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
                   <span>•</span>
                   <span>Intervalos: <strong class="text-cyan-600 dark:text-cyan-400 font-bold">${t.intervalos.length}</strong></span>
                 </div>
+                ${(() => {
+                  const tienePrism = t.largo || t.ancho || t.espesor;
+                  const tieneDiam = t.de || t.di;
+                  if (!tienePrism && !tieneDiam) return '';
+
+                  const partes = [];
+                  if (tienePrism) {
+                    partes.push(`Tocho: ${t.largo || '-'} × ${t.ancho || '-'} × ${t.espesor || '-'} mm`);
+                  }
+                  if (tieneDiam) {
+                    partes.push(`Ø ${t.de || '-'}/${t.di || '-'} mm`);
+                  }
+
+                  return `
+                    <div class="flex items-center gap-2 text-xs font-mono text-cyan-600 dark:text-cyan-400 mt-1">
+                      <i data-lucide="box" class="w-3.5 h-3.5"></i>
+                      <span>${partes.join(' | ')}</span>
+                    </div>
+                  `;
+                })()}
               </div>
             </div>
 
