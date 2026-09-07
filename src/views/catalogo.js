@@ -66,15 +66,14 @@ export function renderCatalogoView() {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label for="codigo1" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  Código 1 (Principal / Parte) <span class="text-rose-500">*</span>
+                  Código 1 (Principal / Parte)
                 </label>
                 <div class="relative">
                   <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400 font-mono text-xs">#</span>
                   <input 
                     type="text" 
                     id="codigo1" 
-                    required 
-                    placeholder="Ej. PZ-1001" 
+                    placeholder="Ej. PZ-1001 (Opcional)" 
                     class="w-full pl-8 pr-4 py-2.5 rounded-xl bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-slate-900 dark:text-white text-sm font-mono placeholder-slate-400 dark:placeholder-slate-500 shadow-inner transition-colors"
                   />
                 </div>
@@ -539,8 +538,8 @@ export function setupCatalogoListeners({ onToast, onRefreshIcons, onDataChange }
         material = materialCustom.value.trim() || 'Otro';
       }
 
-      if (!codigo1 || !descripcion || !material) {
-        onToast?.('Por favor completa todos los campos requeridos (*)', 'error');
+      if (!descripcion || !material) {
+        onToast?.('Por favor completa los campos requeridos (*) Descripción y Material', 'error');
         return;
       }
 
@@ -557,12 +556,13 @@ export function setupCatalogoListeners({ onToast, onRefreshIcons, onDataChange }
           de
         };
 
+        const identificador = codigo1 || descripcion;
         if (piezaEnEdicionId) {
           await piezasService.actualizar(piezaEnEdicionId, payload);
-          onToast?.(`Pieza ${codigo1} actualizada`, 'success');
+          onToast?.(`Pieza "${identificador}" actualizada`, 'success');
         } else {
           await piezasService.agregar({ ...payload, fechaCreacion: new Date().toISOString() });
-          onToast?.(`Pieza ${codigo1} registrada`, 'success');
+          onToast?.(`Pieza "${identificador}" registrada`, 'success');
         }
 
         cerrarFormulario();
