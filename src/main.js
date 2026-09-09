@@ -378,10 +378,33 @@ function registerServiceWorker() {
       navigator.serviceWorker.register('./sw.js')
         .then((reg) => {
           console.log('✔ Service Worker PWA registrado con éxito:', reg.scope);
+
+          // Forzar chequeo de actualización inmediata
+          reg.update();
+
+          // Si se detecta un nuevo Service Worker instalado, recargar para tomar cambios
+          reg.addEventListener('updatefound', () => {
+            const nuevoWorker = reg.installing;
+            if (nuevoWorker) {
+              nuevoWorker.addEventListener('statechange', () => {
+                if (nuevoWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  showToast('Nueva versión detectada. Actualizando...', 'info');
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 800);
+                }
+              });
+            }
+          });
         })
         .catch((err) => {
           console.log('Nota: Service Worker no registrado (modo dev):', err);
         });
+
+      // Escuchar cuando el nuevo controller tome el control
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window.location.reload();
+      });
     });
   }
 
