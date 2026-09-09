@@ -1,10 +1,13 @@
-const CACHE_NAME = 'georgiswork-v1.2.0';
+const CACHE_NAME = 'georgiswork-v1.3.0';
 
 const ASSETS_TO_PRECACHE = [
-  './',
-  './index.html',
-  './icon.png',
-  './manifest.json'
+  "./",
+  "./index.html",
+  "./icon.png",
+  "./manifest.json",
+  "./assets/icon-CBH5Z7Ew.png",
+  "./assets/index-BeQMpQk3.css",
+  "./assets/index-BNtquz9b.js"
 ];
 
 // 1. Evento Install: Precachear activos estáticos iniciales
@@ -31,30 +34,31 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// 3. Evento Fetch: Estrategia Stale-While-Revalidate / Cache First para 100% offline
+// 3. Evento Fetch: 100% Offline primero, con actualización de fondo si hay conexión
 self.addEventListener('fetch', (event) => {
-  // Ignorar peticiones que no sean HTTP/HTTPS (ej. chrome-extension)
   if (!event.request.url.startsWith('http')) return;
 
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
+    caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
+      // Si el recurso ya existe en la caché local, se entrega DE INMEDIATO (funciona sin internet)
       if (cachedResponse) {
-        // Retornar de caché inmediatamente y actualizar en segundo plano si hay red
+        // En segundo plano, si hay conexión a internet, intentamos refrescar la caché silenciosamente
         fetch(event.request)
           .then((networkResponse) => {
-            if (networkResponse && networkResponse.status === 200) {
+            if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
               caches.open(CACHE_NAME).then((cache) => {
                 cache.put(event.request, networkResponse);
               });
             }
           })
           .catch(() => {
-            // Sin conexión: uso normal de la versión en caché
+            // Sin conexión: no pasa nada, ya entregamos la versión local de caché
           });
+
         return cachedResponse;
       }
 
-      // Si no está en caché, buscar en la red y almacenar
+      // Si no estaba en caché, buscar en la red y guardar copia
       return fetch(event.request)
         .then((networkResponse) => {
           if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
@@ -67,9 +71,9 @@ self.addEventListener('fetch', (event) => {
           return networkResponse;
         })
         .catch(() => {
-          // Fallback offline para navegación HTML
+          // Fallback offline si intentan navegar a cualquier ruta sin conexión
           if (event.request.mode === 'navigate') {
-            return caches.match('./index.html');
+            return caches.match('./index.html') || caches.match('./');
           }
         });
     })
