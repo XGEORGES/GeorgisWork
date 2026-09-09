@@ -130,57 +130,26 @@ export function renderCatalogoView() {
               </div>
             </div>
 
-            <!-- Dimensiones de Tocho / Material Bruto -->
+            <!-- Dimensiones de Tocho / Material Bruto (Soporte Multi-Tocho) -->
             <div class="border-t border-slate-200 dark:border-slate-800/80 pt-4 mt-2">
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-                DIMENSIONES DE TOCHO / MATERIAL BRUTO (MM) — OPCIONAL
-              </label>
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-                <div>
-                  <label for="largo" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Largo (mm)</label>
-                  <input 
-                    type="text" 
-                    id="largo" 
-                    placeholder="Ej. 230" 
-                    class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-2 px-3 placeholder-slate-400 shadow-inner transition-colors"
-                  />
-                </div>
-                <div>
-                  <label for="ancho" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Ancho (mm)</label>
-                  <input 
-                    type="text" 
-                    id="ancho" 
-                    placeholder="Ej. 80" 
-                    class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-2 px-3 placeholder-slate-400 shadow-inner transition-colors"
-                  />
-                </div>
-                <div>
-                  <label for="espesor" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Espesor (mm)</label>
-                  <input 
-                    type="text" 
-                    id="espesor" 
-                    placeholder="Ej. 38 o 1-1/2&quot;" 
-                    class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-2 px-3 placeholder-slate-400 shadow-inner transition-colors"
-                  />
-                </div>
-                <div>
-                  <label for="di" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">D.I. (mm)</label>
-                  <input 
-                    type="text" 
-                    id="di" 
-                    placeholder="Ø Interior (ej. 560)" 
-                    class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-2 px-3 placeholder-slate-400 shadow-inner transition-colors"
-                  />
-                </div>
-                <div>
-                  <label for="de" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">D.E. (mm)</label>
-                  <input 
-                    type="text" 
-                    id="de" 
-                    placeholder="Ø Exterior (ej. 630)" 
-                    class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-2 px-3 placeholder-slate-400 shadow-inner transition-colors"
-                  />
-                </div>
+              <div class="flex items-center justify-between mb-2">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  DIMENSIONES DE TOCHO / MATERIAL BRUTO (MM) — OPCIONAL
+                </label>
+                <button 
+                  type="button" 
+                  id="btn-agregar-tocho-fila" 
+                  class="px-2.5 py-1 rounded-lg text-xs font-bold bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30 flex items-center space-x-1 transition-all active:scale-95 cursor-pointer shadow-sm"
+                  title="Agregar otra fila para un tocho adicional"
+                >
+                  <i data-lucide="plus" class="w-3.5 h-3.5 stroke-[3]"></i>
+                  <span>Agregar Tocho</span>
+                </button>
+              </div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 mb-2">Si la pieza está compuesta por múltiples tochos o secciones que luego se unen, añade cada uno con "+ Agregar Tocho".</p>
+              
+              <div id="tochos-filas-container" class="space-y-3">
+                <!-- Se inyectan dinámicamente las filas de tochos -->
               </div>
             </div>
 
@@ -333,30 +302,51 @@ export async function refrescarListaPiezas(onDataChangeCallback) {
             <div class="flex-1 pr-2">
               <span class="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">${pieza.descripcion || '-'}</span>
               ${(() => {
-                const tienePrism = Boolean(pieza.largo || pieza.ancho || pieza.espesor);
-                const tieneDiam = Boolean(pieza.de || pieza.di);
-                if (!tienePrism && !tieneDiam) return '';
+                // Obtener tochos ya sea del array tochos o de los campos individuales heredados
+                let listaTochos = Array.isArray(pieza.tochos) && pieza.tochos.length > 0 ? pieza.tochos : [];
+                if (listaTochos.length === 0 && (pieza.largo || pieza.ancho || pieza.espesor || pieza.di || pieza.de)) {
+                  listaTochos = [{
+                    largo: pieza.largo || '',
+                    ancho: pieza.ancho || '',
+                    espesor: pieza.espesor || '',
+                    di: pieza.di || '',
+                    de: pieza.de || ''
+                  }];
+                }
 
-                const pastillas = [];
-                if (tienePrism) {
-                  pastillas.push(`
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 font-medium">
-                      <span>📏 Tocho:</span>
-                      <span>${pieza.largo || '-'} × ${pieza.ancho || '-'} × ${pieza.espesor || '-'} mm</span>
-                    </span>
-                  `);
-                }
-                if (tieneDiam) {
-                  pastillas.push(`
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 font-medium">
-                      <span>⭕ Ø Ext: ${pieza.de || '-'} mm • Ø Int: ${pieza.di || '-'} mm</span>
-                    </span>
-                  `);
-                }
+                // Filtrar tochos que tengan al menos una medida registrada
+                const tochosValidos = listaTochos.filter(t => t.largo || t.ancho || t.espesor || t.di || t.de);
+                if (tochosValidos.length === 0) return '';
 
                 return `
-                  <div class="mt-1 flex flex-wrap items-center gap-1.5 text-[11px] font-mono">
-                    ${pastillas.join('<span class="text-slate-400 dark:text-slate-600 font-bold select-none">•</span>')}
+                  <div class="mt-1.5 flex flex-col gap-1">
+                    ${tochosValidos.map((t, idx) => {
+                      const tienePrism = Boolean(t.largo || t.ancho || t.espesor);
+                      const tieneDiam = Boolean(t.de || t.di);
+                      const pastillas = [];
+
+                      if (tienePrism) {
+                        pastillas.push(`
+                          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 font-medium">
+                            <span>📏 Tocho${tochosValidos.length > 1 ? ` #${idx + 1}` : ''}:</span>
+                            <span>${t.largo || '-'} × ${t.ancho || '-'} × ${t.espesor || '-'} mm</span>
+                          </span>
+                        `);
+                      }
+                      if (tieneDiam) {
+                        pastillas.push(`
+                          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 font-medium">
+                            <span>⭕ Ø Ext: ${t.de || '-'} mm • Ø Int: ${t.di || '-'} mm</span>
+                          </span>
+                        `);
+                      }
+
+                      return `
+                        <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-mono">
+                          ${pastillas.join('<span class="text-slate-400 dark:text-slate-600 font-bold select-none">•</span>')}
+                        </div>
+                      `;
+                    }).join('')}
                   </div>
                 `;
               })()}
@@ -421,30 +411,183 @@ export function setupCatalogoListeners({ onToast, onRefreshIcons, onDataChange }
   const materialSelect = document.getElementById('material-select');
   const materialCustom = document.getElementById('material-custom');
   const descripcionInput = document.getElementById('descripcion');
-  const largoInput = document.getElementById('largo');
-  const anchoInput = document.getElementById('ancho');
-  const espesorInput = document.getElementById('espesor');
-  const diInput = document.getElementById('di');
-  const deInput = document.getElementById('de');
+  const tochosContainer = document.getElementById('tochos-filas-container');
+  const btnAgregarTochoFila = document.getElementById('btn-agregar-tocho-fila');
 
   const filtroBusquedaInput = document.getElementById('filtro-busqueda');
   const filtroMaterialSelect = document.getElementById('filtro-material');
   const btnClearSearch = document.getElementById('btn-clear-search');
 
+  // Función para crear el HTML de una fila de tocho
+  const crearFilaTochoHtml = (tocho = {}, index = 0, total = 1) => {
+    return `
+      <div class="tocho-fila p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 transition-all space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-mono font-bold text-cyan-600 dark:text-cyan-400 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span>
+            <span>Tocho #${index + 1}</span>
+          </span>
+          ${total > 1 ? `
+            <button 
+              type="button" 
+              class="btn-eliminar-tocho-fila p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
+              title="Eliminar este tocho"
+            >
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          ` : ''}
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
+          <div>
+            <label class="block text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Largo (mm)</label>
+            <input 
+              type="text" 
+              data-campo="largo"
+              value="${tocho.largo || ''}"
+              placeholder="Ej. 230" 
+              class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-1.5 px-2.5 placeholder-slate-400 shadow-inner transition-colors"
+            />
+          </div>
+          <div>
+            <label class="block text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Ancho (mm)</label>
+            <input 
+              type="text" 
+              data-campo="ancho"
+              value="${tocho.ancho || ''}"
+              placeholder="Ej. 80" 
+              class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-1.5 px-2.5 placeholder-slate-400 shadow-inner transition-colors"
+            />
+          </div>
+          <div>
+            <label class="block text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Espesor (mm)</label>
+            <input 
+              type="text" 
+              data-campo="espesor"
+              value="${tocho.espesor || ''}"
+              placeholder="Ej. 38 o 1-1/2&quot;" 
+              class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-1.5 px-2.5 placeholder-slate-400 shadow-inner transition-colors"
+            />
+          </div>
+          <div>
+            <label class="block text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">D.I. (mm)</label>
+            <input 
+              type="text" 
+              data-campo="di"
+              value="${tocho.di || ''}"
+              placeholder="Ø Interior" 
+              class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-1.5 px-2.5 placeholder-slate-400 shadow-inner transition-colors"
+            />
+          </div>
+          <div>
+            <label class="block text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">D.E. (mm)</label>
+            <input 
+              type="text" 
+              data-campo="de"
+              value="${tocho.de || ''}"
+              placeholder="Ø Exterior" 
+              class="w-full bg-white dark:bg-slate-950/90 border border-slate-300 dark:border-slate-800 focus:border-cyan-500 font-mono text-xs text-slate-900 dark:text-white rounded-xl py-1.5 px-2.5 placeholder-slate-400 shadow-inner transition-colors"
+            />
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
+  // Re-renderizar filas de tocho preservando valores si es necesario
+  const renderizarFilasTochos = (tochos = [{}]) => {
+    if (!tochosContainer) return;
+    const lista = tochos.length > 0 ? tochos : [{}];
+    tochosContainer.innerHTML = lista.map((t, idx) => crearFilaTochoHtml(t, idx, lista.length)).join('');
+    if (onRefreshIcons) onRefreshIcons();
+  };
+
+  // Extraer valores de tochos actuales de los inputs
+  const obtenerValoresTochosDeInputs = () => {
+    if (!tochosContainer) return [];
+    const filas = tochosContainer.querySelectorAll('.tocho-fila');
+    const tochos = [];
+    filas.forEach(fila => {
+      const largo = (fila.querySelector('input[data-campo="largo"]')?.value || '').trim();
+      const ancho = (fila.querySelector('input[data-campo="ancho"]')?.value || '').trim();
+      const espesor = (fila.querySelector('input[data-campo="espesor"]')?.value || '').trim();
+      const di = (fila.querySelector('input[data-campo="di"]')?.value || '').trim();
+      const de = (fila.querySelector('input[data-campo="de"]')?.value || '').trim();
+
+      // Solo guardamos si tiene al menos un campo lleno
+      if (largo || ancho || espesor || di || de) {
+        tochos.push({ largo, ancho, espesor, di, de });
+      }
+    });
+    return tochos;
+  };
+
+  if (btnAgregarTochoFila) {
+    btnAgregarTochoFila.addEventListener('click', () => {
+      // Capturar los valores actuales antes de añadir nueva fila
+      const filas = tochosContainer ? tochosContainer.querySelectorAll('.tocho-fila') : [];
+      const actuales = [];
+      filas.forEach(fila => {
+        actuales.push({
+          largo: fila.querySelector('input[data-campo="largo"]')?.value || '',
+          ancho: fila.querySelector('input[data-campo="ancho"]')?.value || '',
+          espesor: fila.querySelector('input[data-campo="espesor"]')?.value || '',
+          di: fila.querySelector('input[data-campo="di"]')?.value || '',
+          de: fila.querySelector('input[data-campo="de"]')?.value || ''
+        });
+      });
+      actuales.push({}); // Nueva fila vacía
+      renderizarFilasTochos(actuales);
+    });
+  }
+
+  if (tochosContainer) {
+    tochosContainer.addEventListener('click', (e) => {
+      const btnEliminar = e.target.closest('.btn-eliminar-tocho-fila');
+      if (btnEliminar) {
+        const filaActual = btnEliminar.closest('.tocho-fila');
+        const todasFilas = Array.from(tochosContainer.querySelectorAll('.tocho-fila'));
+        const indexAEliminar = todasFilas.indexOf(filaActual);
+        
+        const actuales = [];
+        todasFilas.forEach((f, idx) => {
+          if (idx !== indexAEliminar) {
+            actuales.push({
+              largo: f.querySelector('input[data-campo="largo"]')?.value || '',
+              ancho: f.querySelector('input[data-campo="ancho"]')?.value || '',
+              espesor: f.querySelector('input[data-campo="espesor"]')?.value || '',
+              di: f.querySelector('input[data-campo="di"]')?.value || '',
+              de: f.querySelector('input[data-campo="de"]')?.value || ''
+            });
+          }
+        });
+
+        renderizarFilasTochos(actuales.length > 0 ? actuales : [{}]);
+      }
+    });
+  }
+
   const abrirFormulario = (pieza = null) => {
     if (pieza) {
       piezaEnEdicionId = pieza.id;
-      if (formTitle) formTitle.textContent = `Editar Pieza: ${pieza.codigo1}`;
+      if (formTitle) formTitle.textContent = `Editar Pieza: ${pieza.codigo1 || pieza.descripcion}`;
       if (btnSaveText) btnSaveText.textContent = 'Actualizar Pieza';
       if (idInput) idInput.value = pieza.id;
       if (codigo1Input) codigo1Input.value = pieza.codigo1 || '';
       if (codigo2Input) codigo2Input.value = pieza.codigo2 || '';
       if (descripcionInput) descripcionInput.value = pieza.descripcion || '';
-      if (largoInput) largoInput.value = pieza.largo || '';
-      if (anchoInput) anchoInput.value = pieza.ancho || '';
-      if (espesorInput) espesorInput.value = pieza.espesor || '';
-      if (diInput) diInput.value = pieza.di || '';
-      if (deInput) deInput.value = pieza.de || '';
+
+      // Cargar tochos
+      let tochosACargar = Array.isArray(pieza.tochos) && pieza.tochos.length > 0 ? pieza.tochos : [];
+      if (tochosACargar.length === 0 && (pieza.largo || pieza.ancho || pieza.espesor || pieza.di || pieza.de)) {
+        tochosACargar = [{
+          largo: pieza.largo || '',
+          ancho: pieza.ancho || '',
+          espesor: pieza.espesor || '',
+          di: pieza.di || '',
+          de: pieza.de || ''
+        }];
+      }
+      renderizarFilasTochos(tochosACargar.length > 0 ? tochosACargar : [{}]);
 
       if (MATERIALES_CNC.includes(pieza.material)) {
         if (materialSelect) materialSelect.value = pieza.material;
@@ -465,11 +608,7 @@ export function setupCatalogoListeners({ onToast, onRefreshIcons, onDataChange }
       if (btnSaveText) btnSaveText.textContent = 'Guardar Pieza';
       if (form) form.reset();
       if (idInput) idInput.value = '';
-      if (largoInput) largoInput.value = '';
-      if (anchoInput) anchoInput.value = '';
-      if (espesorInput) espesorInput.value = '';
-      if (diInput) diInput.value = '';
-      if (deInput) deInput.value = '';
+      renderizarFilasTochos([{}]);
       if (materialCustom) {
         materialCustom.value = '';
         materialCustom.classList.add('hidden');
@@ -488,11 +627,7 @@ export function setupCatalogoListeners({ onToast, onRefreshIcons, onDataChange }
     piezaEnEdicionId = null;
     if (form) form.reset();
     if (idInput) idInput.value = '';
-    if (largoInput) largoInput.value = '';
-    if (anchoInput) anchoInput.value = '';
-    if (espesorInput) espesorInput.value = '';
-    if (diInput) diInput.value = '';
-    if (deInput) deInput.value = '';
+    renderizarFilasTochos([{}]);
     if (formContainer) formContainer.classList.add('hidden');
     if (materialCustom) materialCustom.classList.add('hidden');
   };
@@ -528,11 +663,14 @@ export function setupCatalogoListeners({ onToast, onRefreshIcons, onDataChange }
       const codigo1 = codigo1Input.value.trim();
       const codigo2 = codigo2Input.value.trim();
       const descripcion = descripcionInput.value.trim();
-      const largo = largoInput ? largoInput.value.trim() : '';
-      const ancho = anchoInput ? anchoInput.value.trim() : '';
-      const espesor = espesorInput ? espesorInput.value.trim() : '';
-      const di = diInput ? diInput.value.trim() : '';
-      const de = deInput ? deInput.value.trim() : '';
+      const tochos = obtenerValoresTochosDeInputs();
+      const primerTocho = tochos[0] || {};
+      const largo = primerTocho.largo || '';
+      const ancho = primerTocho.ancho || '';
+      const espesor = primerTocho.espesor || '';
+      const di = primerTocho.di || '';
+      const de = primerTocho.de || '';
+
       let material = materialSelect.value;
       if (material === 'Otro') {
         material = materialCustom.value.trim() || 'Otro';
@@ -549,6 +687,7 @@ export function setupCatalogoListeners({ onToast, onRefreshIcons, onDataChange }
           codigo2,
           descripcion,
           material,
+          tochos,
           largo,
           ancho,
           espesor,

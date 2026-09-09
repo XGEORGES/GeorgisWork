@@ -187,30 +187,49 @@ export async function refrescarGridSeleccion(onRefreshIcons) {
           <div class="flex-1 pr-2">
             <span class="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">${pieza.descripcion || '-'}</span>
             ${(() => {
-              const tienePrism = Boolean(pieza.largo || pieza.ancho || pieza.espesor);
-              const tieneDiam = Boolean(pieza.de || pieza.di);
-              if (!tienePrism && !tieneDiam) return '';
+              let listaTochos = Array.isArray(pieza.tochos) && pieza.tochos.length > 0 ? pieza.tochos : [];
+              if (listaTochos.length === 0 && (pieza.largo || pieza.ancho || pieza.espesor || pieza.di || pieza.de)) {
+                listaTochos = [{
+                  largo: pieza.largo || '',
+                  ancho: pieza.ancho || '',
+                  espesor: pieza.espesor || '',
+                  di: pieza.di || '',
+                  de: pieza.de || ''
+                }];
+              }
 
-              const pastillas = [];
-              if (tienePrism) {
-                pastillas.push(`
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 font-medium">
-                    <span>📏 Tocho:</span>
-                    <span>${pieza.largo || '-'} × ${pieza.ancho || '-'} × ${pieza.espesor || '-'} mm</span>
-                  </span>
-                `);
-              }
-              if (tieneDiam) {
-                pastillas.push(`
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 font-medium">
-                    <span>⭕ Ø Ext: ${pieza.de || '-'} mm • Ø Int: ${pieza.di || '-'} mm</span>
-                  </span>
-                `);
-              }
+              const tochosValidos = listaTochos.filter(t => t.largo || t.ancho || t.espesor || t.di || t.de);
+              if (tochosValidos.length === 0) return '';
 
               return `
-                <div class="mt-1 flex flex-wrap items-center gap-1.5 text-[11px] font-mono">
-                  ${pastillas.join('<span class="text-slate-400 dark:text-slate-600 font-bold select-none">•</span>')}
+                <div class="mt-1.5 flex flex-col gap-1">
+                  ${tochosValidos.map((t, idx) => {
+                    const tienePrism = Boolean(t.largo || t.ancho || t.espesor);
+                    const tieneDiam = Boolean(t.de || t.di);
+                    const pastillas = [];
+
+                    if (tienePrism) {
+                      pastillas.push(`
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 font-medium">
+                          <span>📏 Tocho${tochosValidos.length > 1 ? ` #${idx + 1}` : ''}:</span>
+                          <span>${t.largo || '-'} × ${t.ancho || '-'} × ${t.espesor || '-'} mm</span>
+                        </span>
+                      `);
+                    }
+                    if (tieneDiam) {
+                      pastillas.push(`
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 font-medium">
+                          <span>⭕ Ø Ext: ${t.de || '-'} mm • Ø Int: ${t.di || '-'} mm</span>
+                        </span>
+                      `);
+                    }
+
+                    return `
+                      <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-mono">
+                        ${pastillas.join('<span class="text-slate-400 dark:text-slate-600 font-bold select-none">•</span>')}
+                      </div>
+                    `;
+                  }).join('')}
                 </div>
               `;
             })()}
@@ -407,12 +426,14 @@ export function setupSeleccionListeners({ onToast, onRefreshIcons, onNavigateToC
       let nuevosCount = 0;
 
       for (const item of items) {
+        const tochosItem = Array.isArray(item.pieza.tochos) ? item.pieza.tochos : [];
         const resultado = await trabajosService.agregarOFusionar({
           piezaId: item.pieza.id,
           codigo1: item.pieza.codigo1,
           codigo2: item.pieza.codigo2,
           descripcion: item.pieza.descripcion,
           material: item.pieza.material,
+          tochos: tochosItem,
           largo: item.pieza.largo || '',
           ancho: item.pieza.ancho || '',
           espesor: item.pieza.espesor || '',

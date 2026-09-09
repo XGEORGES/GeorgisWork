@@ -27,16 +27,41 @@ export const piezasService = {
   },
 
   async agregar(pieza) {
+    const tochosNormalizados = Array.isArray(pieza.tochos)
+      ? pieza.tochos.map(t => ({
+          largo: t.largo != null ? String(t.largo).trim() : '',
+          ancho: t.ancho != null ? String(t.ancho).trim() : '',
+          espesor: t.espesor != null ? String(t.espesor).trim() : '',
+          di: t.di != null ? String(t.di).trim() : '',
+          de: t.de != null ? String(t.de).trim() : ''
+        }))
+      : [];
+
+    // Si no vino array tochos pero sí campos sueltos, migrar al array
+    if (tochosNormalizados.length === 0 && (pieza.largo || pieza.ancho || pieza.espesor || pieza.di || pieza.de)) {
+      tochosNormalizados.push({
+        largo: pieza.largo != null ? String(pieza.largo).trim() : '',
+        ancho: pieza.ancho != null ? String(pieza.ancho).trim() : '',
+        espesor: pieza.espesor != null ? String(pieza.espesor).trim() : '',
+        di: pieza.di != null ? String(pieza.di).trim() : '',
+        de: pieza.de != null ? String(pieza.de).trim() : ''
+      });
+    }
+
+    const primerTocho = tochosNormalizados[0] || {};
+
     const nuevaPieza = {
       codigo1: pieza.codigo1?.trim() || '',
       codigo2: pieza.codigo2?.trim() || '',
       descripcion: pieza.descripcion?.trim() || '',
       material: pieza.material?.trim() || '',
-      largo: pieza.largo != null ? String(pieza.largo).trim() : '',
-      ancho: pieza.ancho != null ? String(pieza.ancho).trim() : '',
-      espesor: pieza.espesor != null ? String(pieza.espesor).trim() : '',
-      di: pieza.di != null ? String(pieza.di).trim() : '',
-      de: pieza.de != null ? String(pieza.de).trim() : '',
+      tochos: tochosNormalizados,
+      // Retrocompatibilidad con registros previos
+      largo: primerTocho.largo || (pieza.largo != null ? String(pieza.largo).trim() : ''),
+      ancho: primerTocho.ancho || (pieza.ancho != null ? String(pieza.ancho).trim() : ''),
+      espesor: primerTocho.espesor || (pieza.espesor != null ? String(pieza.espesor).trim() : ''),
+      di: primerTocho.di || (pieza.di != null ? String(pieza.di).trim() : ''),
+      de: primerTocho.de || (pieza.de != null ? String(pieza.de).trim() : ''),
       fechaCreacion: pieza.fechaCreacion || new Date().toISOString()
     };
     return await db.piezas.add(nuevaPieza);
@@ -44,20 +69,36 @@ export const piezasService = {
 
   async actualizar(id, cambios) {
     const datosActualizados = { ...cambios };
-    if ('largo' in datosActualizados) {
-      datosActualizados.largo = datosActualizados.largo != null ? String(datosActualizados.largo).trim() : '';
-    }
-    if ('ancho' in datosActualizados) {
-      datosActualizados.ancho = datosActualizados.ancho != null ? String(datosActualizados.ancho).trim() : '';
-    }
-    if ('espesor' in datosActualizados) {
-      datosActualizados.espesor = datosActualizados.espesor != null ? String(datosActualizados.espesor).trim() : '';
-    }
-    if ('di' in datosActualizados) {
-      datosActualizados.di = datosActualizados.di != null ? String(datosActualizados.di).trim() : '';
-    }
-    if ('de' in datosActualizados) {
-      datosActualizados.de = datosActualizados.de != null ? String(datosActualizados.de).trim() : '';
+    if ('tochos' in datosActualizados && Array.isArray(datosActualizados.tochos)) {
+      datosActualizados.tochos = datosActualizados.tochos.map(t => ({
+        largo: t.largo != null ? String(t.largo).trim() : '',
+        ancho: t.ancho != null ? String(t.ancho).trim() : '',
+        espesor: t.espesor != null ? String(t.espesor).trim() : '',
+        di: t.di != null ? String(t.di).trim() : '',
+        de: t.de != null ? String(t.de).trim() : ''
+      }));
+      const primerTocho = datosActualizados.tochos[0] || {};
+      datosActualizados.largo = primerTocho.largo || '';
+      datosActualizados.ancho = primerTocho.ancho || '';
+      datosActualizados.espesor = primerTocho.espesor || '';
+      datosActualizados.di = primerTocho.di || '';
+      datosActualizados.de = primerTocho.de || '';
+    } else {
+      if ('largo' in datosActualizados) {
+        datosActualizados.largo = datosActualizados.largo != null ? String(datosActualizados.largo).trim() : '';
+      }
+      if ('ancho' in datosActualizados) {
+        datosActualizados.ancho = datosActualizados.ancho != null ? String(datosActualizados.ancho).trim() : '';
+      }
+      if ('espesor' in datosActualizados) {
+        datosActualizados.espesor = datosActualizados.espesor != null ? String(datosActualizados.espesor).trim() : '';
+      }
+      if ('di' in datosActualizados) {
+        datosActualizados.di = datosActualizados.di != null ? String(datosActualizados.di).trim() : '';
+      }
+      if ('de' in datosActualizados) {
+        datosActualizados.de = datosActualizados.de != null ? String(datosActualizados.de).trim() : '';
+      }
     }
     return await db.piezas.update(Number(id), datosActualizados);
   },
@@ -70,17 +111,31 @@ export const piezasService = {
     if (!termino) return await this.obtenerTodas();
     const query = termino.toLowerCase().trim();
     return await db.piezas
-      .filter(p =>
-        (p.codigo1 && p.codigo1.toLowerCase().includes(query)) ||
-        (p.codigo2 && p.codigo2.toLowerCase().includes(query)) ||
-        (p.descripcion && p.descripcion.toLowerCase().includes(query)) ||
-        (p.material && p.material.toLowerCase().includes(query)) ||
-        (p.largo && String(p.largo).toLowerCase().includes(query)) ||
-        (p.ancho && String(p.ancho).toLowerCase().includes(query)) ||
-        (p.espesor && String(p.espesor).toLowerCase().includes(query)) ||
-        (p.di && String(p.di).toLowerCase().includes(query)) ||
-        (p.de && String(p.de).toLowerCase().includes(query))
-      )
+      .filter(p => {
+        const coincideBasico = 
+          (p.codigo1 && p.codigo1.toLowerCase().includes(query)) ||
+          (p.codigo2 && p.codigo2.toLowerCase().includes(query)) ||
+          (p.descripcion && p.descripcion.toLowerCase().includes(query)) ||
+          (p.material && p.material.toLowerCase().includes(query)) ||
+          (p.largo && String(p.largo).toLowerCase().includes(query)) ||
+          (p.ancho && String(p.ancho).toLowerCase().includes(query)) ||
+          (p.espesor && String(p.espesor).toLowerCase().includes(query)) ||
+          (p.di && String(p.di).toLowerCase().includes(query)) ||
+          (p.de && String(p.de).toLowerCase().includes(query));
+
+        if (coincideBasico) return true;
+
+        if (Array.isArray(p.tochos)) {
+          return p.tochos.some(t => 
+            (t.largo && String(t.largo).toLowerCase().includes(query)) ||
+            (t.ancho && String(t.ancho).toLowerCase().includes(query)) ||
+            (t.espesor && String(t.espesor).toLowerCase().includes(query)) ||
+            (t.di && String(t.di).toLowerCase().includes(query)) ||
+            (t.de && String(t.de).toLowerCase().includes(query))
+          );
+        }
+        return false;
+      })
       .toArray();
   }
 };
@@ -129,17 +184,40 @@ export const trabajosService = {
         await db.trabajos.update(activos.id, { cantidad: nuevaCantidad });
         return { fusionado: true, id: activos.id, nuevaCantidad };
       } else {
+        const tochosNormalizados = Array.isArray(trabajoData.tochos)
+          ? trabajoData.tochos.map(t => ({
+              largo: t.largo != null ? String(t.largo).trim() : '',
+              ancho: t.ancho != null ? String(t.ancho).trim() : '',
+              espesor: t.espesor != null ? String(t.espesor).trim() : '',
+              di: t.di != null ? String(t.di).trim() : '',
+              de: t.de != null ? String(t.de).trim() : ''
+            }))
+          : [];
+
+        if (tochosNormalizados.length === 0 && (trabajoData.largo || trabajoData.ancho || trabajoData.espesor || trabajoData.di || trabajoData.de)) {
+          tochosNormalizados.push({
+            largo: trabajoData.largo != null ? String(trabajoData.largo).trim() : '',
+            ancho: trabajoData.ancho != null ? String(trabajoData.ancho).trim() : '',
+            espesor: trabajoData.espesor != null ? String(trabajoData.espesor).trim() : '',
+            di: trabajoData.di != null ? String(trabajoData.di).trim() : '',
+            de: trabajoData.de != null ? String(trabajoData.de).trim() : ''
+          });
+        }
+
+        const primerTocho = tochosNormalizados[0] || {};
+
         const nuevoTrabajo = {
           piezaId: trabajoData.piezaId || null,
           codigo1: trabajoData.codigo1 || '',
           codigo2: trabajoData.codigo2 || '',
           descripcion: trabajoData.descripcion || '',
           material: trabajoData.material || '',
-          largo: trabajoData.largo != null ? String(trabajoData.largo).trim() : '',
-          ancho: trabajoData.ancho != null ? String(trabajoData.ancho).trim() : '',
-          espesor: trabajoData.espesor != null ? String(trabajoData.espesor).trim() : '',
-          di: trabajoData.di != null ? String(trabajoData.di).trim() : '',
-          de: trabajoData.de != null ? String(trabajoData.de).trim() : '',
+          tochos: tochosNormalizados,
+          largo: primerTocho.largo || (trabajoData.largo != null ? String(trabajoData.largo).trim() : ''),
+          ancho: primerTocho.ancho || (trabajoData.ancho != null ? String(trabajoData.ancho).trim() : ''),
+          espesor: primerTocho.espesor || (trabajoData.espesor != null ? String(trabajoData.espesor).trim() : ''),
+          di: primerTocho.di || (trabajoData.di != null ? String(trabajoData.di).trim() : ''),
+          de: primerTocho.de || (trabajoData.de != null ? String(trabajoData.de).trim() : ''),
           cantidad: Number(trabajoData.cantidad || 1),
           estado: 'pendiente',
           fechaCreacion: trabajoData.fechaCreacion || new Date().toISOString(),

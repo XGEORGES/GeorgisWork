@@ -193,22 +193,40 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
                   <span>Intervalos: <strong class="text-cyan-600 dark:text-cyan-400 font-bold">${t.intervalos.length}</strong></span>
                 </div>
                 ${(() => {
-                  const tienePrism = t.largo || t.ancho || t.espesor;
-                  const tieneDiam = t.de || t.di;
-                  if (!tienePrism && !tieneDiam) return '';
+                  let listaTochos = Array.isArray(t.tochos) && t.tochos.length > 0 ? t.tochos : [];
+                  if (listaTochos.length === 0 && (t.largo || t.ancho || t.espesor || t.di || t.de)) {
+                    listaTochos = [{
+                      largo: t.largo || '',
+                      ancho: t.ancho || '',
+                      espesor: t.espesor || '',
+                      di: t.di || '',
+                      de: t.de || ''
+                    }];
+                  }
 
-                  const partes = [];
-                  if (tienePrism) {
-                    partes.push(`Tocho: ${t.largo || '-'} × ${t.ancho || '-'} × ${t.espesor || '-'} mm`);
-                  }
-                  if (tieneDiam) {
-                    partes.push(`Ø ${t.de || '-'}/${t.di || '-'} mm`);
-                  }
+                  const tochosValidos = listaTochos.filter(tocho => tocho.largo || tocho.ancho || tocho.espesor || tocho.di || tocho.de);
+                  if (tochosValidos.length === 0) return '';
 
                   return `
-                    <div class="flex items-center gap-2 text-xs font-mono text-cyan-600 dark:text-cyan-400 mt-1">
-                      <i data-lucide="box" class="w-3.5 h-3.5"></i>
-                      <span>${partes.join(' | ')}</span>
+                    <div class="mt-1.5 space-y-1">
+                      ${tochosValidos.map((tocho, idx) => {
+                        const tienePrism = tocho.largo || tocho.ancho || tocho.espesor;
+                        const tieneDiam = tocho.de || tocho.di;
+                        const partes = [];
+                        if (tienePrism) {
+                          partes.push(`Tocho${tochosValidos.length > 1 ? ` #${idx + 1}` : ''}: ${tocho.largo || '-'} × ${tocho.ancho || '-'} × ${tocho.espesor || '-'} mm`);
+                        }
+                        if (tieneDiam) {
+                          partes.push(`Ø ${tocho.de || '-'}/${tocho.di || '-'} mm`);
+                        }
+
+                        return `
+                          <div class="flex items-center gap-2 text-xs font-mono text-cyan-600 dark:text-cyan-400">
+                            <i data-lucide="box" class="w-3.5 h-3.5 flex-shrink-0"></i>
+                            <span>${partes.join(' | ')}</span>
+                          </div>
+                        `;
+                      }).join('')}
                     </div>
                   `;
                 })()}
