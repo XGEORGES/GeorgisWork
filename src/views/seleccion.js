@@ -204,29 +204,28 @@ export async function refrescarGridSeleccion(onRefreshIcons) {
               return `
                 <div class="mt-1.5 flex flex-col gap-1">
                   ${tochosValidos.map((t, idx) => {
-                    const tienePrism = Boolean(t.largo || t.ancho || t.espesor);
+                    const labelTocho = `Tocho${tochosValidos.length > 1 ? ` #${idx + 1}` : ''}`;
                     const tieneDiam = Boolean(t.de || t.di);
-                    const pastillas = [];
+                    let textoMedidas = '';
 
-                    if (tienePrism) {
-                      pastillas.push(`
-                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 font-medium">
-                          <span>📏 Tocho${tochosValidos.length > 1 ? ` #${idx + 1}` : ''}:</span>
-                          <span>${t.largo || '-'} × ${t.ancho || '-'} × ${t.espesor || '-'} mm</span>
-                        </span>
-                      `);
-                    }
                     if (tieneDiam) {
-                      pastillas.push(`
-                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 font-medium">
-                          <span>⭕ Ø Ext: ${t.de || '-'} mm • Ø Int: ${t.di || '-'} mm</span>
-                        </span>
-                      `);
+                      const diams = [];
+                      if (t.de) diams.push(`Ø Ext: ${t.de} mm`);
+                      if (t.di) diams.push(`Ø Int: ${t.di} mm`);
+                      textoMedidas = diams.join(' • ');
+                      if (t.largo) {
+                        textoMedidas = textoMedidas ? `${textoMedidas} × L: ${t.largo} mm` : `L: ${t.largo} mm`;
+                      }
+                    } else {
+                      const dims = [t.largo, t.ancho, t.espesor].filter(Boolean);
+                      textoMedidas = dims.length ? `${dims.join(' × ')} mm` : '';
                     }
 
                     return `
                       <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-mono">
-                        ${pastillas.join('<span class="text-slate-400 dark:text-slate-600 font-bold select-none">•</span>')}
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 font-medium">
+                          <span>${tieneDiam ? '⭕' : '📏'} ${labelTocho}: ${textoMedidas}</span>
+                        </span>
                       </div>
                     `;
                   }).join('')}

@@ -210,20 +210,27 @@ export async function refrescarControlTrabajos(onRefreshIcons) {
                   return `
                     <div class="mt-1.5 space-y-1">
                       ${tochosValidos.map((tocho, idx) => {
-                        const tienePrism = tocho.largo || tocho.ancho || tocho.espesor;
-                        const tieneDiam = tocho.de || tocho.di;
-                        const partes = [];
-                        if (tienePrism) {
-                          partes.push(`Tocho${tochosValidos.length > 1 ? ` #${idx + 1}` : ''}: ${tocho.largo || '-'} × ${tocho.ancho || '-'} × ${tocho.espesor || '-'} mm`);
-                        }
+                        const labelTocho = `Tocho${tochosValidos.length > 1 ? ` #${idx + 1}` : ''}`;
+                        const tieneDiam = Boolean(tocho.de || tocho.di);
+                        let textoMedidas = '';
+
                         if (tieneDiam) {
-                          partes.push(`Ø ${tocho.de || '-'}/${tocho.di || '-'} mm`);
+                          const diams = [];
+                          if (tocho.de) diams.push(`Ø Ext: ${tocho.de} mm`);
+                          if (tocho.di) diams.push(`Ø Int: ${tocho.di} mm`);
+                          textoMedidas = diams.join(' • ');
+                          if (tocho.largo) {
+                            textoMedidas = textoMedidas ? `${textoMedidas} × L: ${tocho.largo} mm` : `L: ${tocho.largo} mm`;
+                          }
+                        } else {
+                          const dims = [tocho.largo, tocho.ancho, tocho.espesor].filter(Boolean);
+                          textoMedidas = dims.length ? `${dims.join(' × ')} mm` : '';
                         }
 
                         return `
                           <div class="flex items-center gap-2 text-xs font-mono text-cyan-600 dark:text-cyan-400">
-                            <i data-lucide="box" class="w-3.5 h-3.5 flex-shrink-0"></i>
-                            <span>${partes.join(' | ')}</span>
+                            <i data-lucide="${tieneDiam ? 'circle' : 'box'}" class="w-3.5 h-3.5 flex-shrink-0"></i>
+                            <span>${labelTocho}: ${textoMedidas}</span>
                           </div>
                         `;
                       }).join('')}

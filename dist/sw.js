@@ -1,4 +1,4 @@
-const CACHE_NAME = 'georgiswork-v1.3.0';
+const CACHE_NAME = 'georgiswork-v1.4.0';
 
 const ASSETS_TO_PRECACHE = [
   "./",
@@ -7,7 +7,7 @@ const ASSETS_TO_PRECACHE = [
   "./manifest.json",
   "./assets/icon-CBH5Z7Ew.png",
   "./assets/index-BeQMpQk3.css",
-  "./assets/index-BNtquz9b.js"
+  "./assets/index-CHM0pRyX.js"
 ];
 
 // 1. Evento Install: Precachear activos estáticos iniciales
